@@ -11,4 +11,6 @@ struct Scene
 {
 	Scene();
 	~Scene();
-}
+};
+
+#endif 
