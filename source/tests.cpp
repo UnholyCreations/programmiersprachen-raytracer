@@ -34,7 +34,7 @@ TEST_CASE("LoadMat", "[LoaderMat]")
     //define material blue 0 0 1 0 0 1 0 0 1 1
    std::cout<<"\n Print Loaded:\n";
     std::string line;
-    std::ifstream file ("scene_material.txt");
+    std::ifstream file ("scene.sdf");
      if(file.is_open()){
 
       while(std::getline(file,line)){
