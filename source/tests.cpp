@@ -6,6 +6,7 @@
 #include "sphere.hpp"
 #include "shape.hpp"
 #include "material.hpp"
+#include "camera.hpp"
 #include "scene.hpp"
 #include <string>
 #include <fstream> 
@@ -22,7 +23,7 @@ TEST_CASE("LoadMat", "[LoaderMat]")
 int main(int argc, char *argv[])
 {
     Scene myscene;
-  std::vector<Shape> ShapeVec;
+    {Camera cam;} //will get deleted
  
   
     std::string line;
@@ -58,9 +59,9 @@ int main(int argc, char *argv[])
             ss>> mat_get_ks.g;
             ss>> mat_get_ks.b;
             ss>> mat_get_m;
-            //Material loadmat(mat_get_name,mat_get_ka,mat_get_kd,mat_get_ks, mat_get_m);
-            Material newmat(mat_get_name,mat_get_ka,mat_get_kd,mat_get_ks, mat_get_m);
-            myscene.MaterialMap.insert({mat_get_name,newmat});
+            //Temporary Brackets
+            {Material newmat(mat_get_name,mat_get_ka,mat_get_kd,mat_get_ks, mat_get_m);
+            myscene.MaterialMap.insert({mat_get_name,newmat});}
 
 
         }
@@ -87,10 +88,10 @@ int main(int argc, char *argv[])
             ss>> mat_name;
             
     
-            
-            std::shared_ptr<Shape> temp_ptr=std::make_shared<Box>(Box (box_name, myscene.MaterialMap[mat_name], box_min, box_max));
-               //std::cout<<"pointers at push"<<temp_ptr.use_count();
+            //Temporary Brackets        
+            {std::shared_ptr<Shape> temp_ptr=std::make_shared<Box>(Box {box_name, myscene.MaterialMap[mat_name], box_min, box_max});
              myscene.ShapeVector.push_back(temp_ptr);
+            }
             //box.print(std::cout);
             
             }
