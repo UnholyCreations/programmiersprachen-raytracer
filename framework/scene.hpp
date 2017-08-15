@@ -20,13 +20,9 @@ struct Scene
 	{
 	for (int i=0;i<ShapeVector.size();i++) //if i dont mess the indices after a month pause its not me... :D
         {   
-            //std::static_pointer_cast
-            //std::const_pointer_cast
-            //std::dynamic_pointer_cast
+
         	(*ShapeVector[i]).print(std::cout);
-            //std::cout<<(*ShapeVector[i]);
-        	//ShapeVector[i]->print(std::cout);
-            //(*ShapeVector[i]).print(std::cout);
+
         };
     }
 };

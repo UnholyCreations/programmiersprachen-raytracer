@@ -15,21 +15,6 @@
 #include <map>
 #include <vector>
 #include <memory> 
-Material find_mat(std::vector<Material> vec,std::string mat_name)
-  {
-    Material put_mat;
-            for (Material i : vec)
-
-            {
-              if (i.m_name==mat_name){Material put_mat=i; 
-                //std::cout<<"works\n";
-                 return put_mat;}
-              
-            }
-            return put_mat;
-}
-
-
 TEST_CASE("LoadMat", "[LoaderMat]")
 {
 }
