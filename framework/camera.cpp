@@ -1,12 +1,12 @@
 #include "camera.hpp"
 //Defualt
 Camera::Camera():
-  m_name {"Default_Camera"},
+  m_name {"Default Camera"},
   m_fov {75},
   m_pos {0, 0, 0},
   m_dir {-1, 0, 0},
   m_up {0, 0, -1}
-  {std::cout<<"cam default\n";}
+  {}
 
 Camera::Camera(std::string const& m_name,int const& m_fov, glm::vec3 const& m_pos, glm::vec3 const& m_dir, glm::vec3 const& m_up):
   m_name (m_name),
@@ -14,8 +14,8 @@ Camera::Camera(std::string const& m_name,int const& m_fov, glm::vec3 const& m_po
   m_pos (m_pos),
   m_dir (m_dir),
   m_up (m_up)
-  {std::cout<<"camera user\n";}
-Camera::~Camera(){std::cout<<"camera dies\n";}
+  {}
+Camera::~Camera(){}
 
 std::string const& Camera::get_name() const
 {
@@ -35,3 +35,11 @@ glm::vec3 const& Camera::get_dir() const{
 glm::vec3 const& Camera::get_upvec() const{
   return m_up;
 } 
+void Camera::print() 
+{
+        std::cout<<"\nname:"<<m_name<<"\n";
+        std::cout<<"fov:"<<m_fov<<"\n";
+        std::cout<<"pos:"<<m_pos.x<<" "<<m_pos.y<<" "<<m_pos.z<<"\n";
+        std::cout<<"dir:"<<m_dir.x<<" "<<m_dir.y<<" "<<m_dir.z<<"\n";
+        std::cout<<"upvec:"<<m_up.x<<" "<<m_up.y<<" "<<m_up.z<<"\n";
+}

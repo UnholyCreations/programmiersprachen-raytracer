@@ -1,7 +1,8 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
-#include "string"
-#include "iostream"
+#include <string>
+#include <iostream>
+#include <ostream>
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
 class Camera
@@ -17,7 +18,7 @@ public:
 	glm::vec3 const& get_pos() const;
 	glm::vec3 const& get_dir() const;
 	glm::vec3 const& get_upvec() const;	
-
+	void print();
 	//DATA
 
   	std::string m_name;
