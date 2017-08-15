@@ -6,17 +6,24 @@
 #include "sphere.hpp"
 #include "shape.hpp"
 #include "material.hpp"
-#include "material.cpp"
+#include "scene.hpp"
 #include <string>
 #include <fstream> 
-#include <iostream>   
+#include <sstream>
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <vector>
+#include <memory> 
 Material find_mat(std::vector<Material> vec,std::string mat_name)
   {
     Material put_mat;
             for (Material i : vec)
 
             {
-              if (i.m_name==mat_name){Material put_mat=i; std::cout<<"works\n"; return put_mat;}
+              if (i.m_name==mat_name){Material put_mat=i; 
+                //std::cout<<"works\n";
+                 return put_mat;}
               
             }
             return put_mat;
@@ -25,14 +32,14 @@ Material find_mat(std::vector<Material> vec,std::string mat_name)
 
 TEST_CASE("LoadMat", "[LoaderMat]")
 {
+}
 
-  std::vector<Material> MaterialVec;
+int main(int argc, char *argv[])
+{
+    Scene myscene;
   std::vector<Shape> ShapeVec;
  
-
-    //define material red  1 0 0 1 0 0 1 0 0 1
-    //define material blue 0 0 1 0 0 1 0 0 1 1
-   std::cout<<"\n Print Loaded:\n";
+  
     std::string line;
     std::ifstream file ("scene.sdf");
      if(file.is_open()){
@@ -68,7 +75,7 @@ TEST_CASE("LoadMat", "[LoaderMat]")
             ss>> mat_get_m;
             //Material loadmat(mat_get_name,mat_get_ka,mat_get_kd,mat_get_ks, mat_get_m);
             Material newmat(mat_get_name,mat_get_ka,mat_get_kd,mat_get_ks, mat_get_m);
-            MaterialVec.push_back(newmat);
+            myscene.MaterialMap.insert({mat_get_name,newmat});
 
 
         }
@@ -78,7 +85,6 @@ TEST_CASE("LoadMat", "[LoaderMat]")
 
 
             {
-            //;
             std::string box_name;
             glm::vec3 box_min;
             glm::vec3 box_max;
@@ -94,60 +100,41 @@ TEST_CASE("LoadMat", "[LoaderMat]")
             ss>> box_max.y;
             ss>> box_max.z;
             ss>> mat_name;
-            Material put_mat=find_mat(MaterialVec,mat_name);
-            std::cout<<"put_mat: "+put_mat.m_name<<"\n";
             
+    
             
-            Box box (box_name,put_mat,box_min,box_max);
-            box.print(std::cout);
+            std::shared_ptr<Shape> temp_ptr=std::make_shared<Box>(Box (box_name, myscene.MaterialMap[mat_name], box_min, box_max));
+               //std::cout<<"pointers at push"<<temp_ptr.use_count();
+             myscene.ShapeVector.push_back(temp_ptr);
+            //box.print(std::cout);
             
             }
             if (keyword =="sphere")
             {
-            std::cout<<"keyword sphere  \n";
+            //std::cout<<"keyword sphere  \n";
             glm::vec3 sphere_center;
             double sphere_radius;
             std::string mat_name;
             std::string sphere_name;
             ss>> sphere_name; 
-            std::cout<<"sphere name:"+sphere_name+"\n";
+            //std::cout<<"sphere name:"+sphere_name+"\n";
             ss>> sphere_center.x;
             ss>> sphere_center.y;
             ss>> sphere_center.z; 
             ss>> sphere_radius;
             ss>> mat_name;
-            Material put_mat=find_mat(MaterialVec,mat_name);
-            std::cout<<"put_mat: "+put_mat.m_name<<"\n";
-            Sphere sphere(sphere_name, put_mat,sphere_center,sphere_radius);
-            sphere.print(std::cout);
+            //std::cout<<"put_mat: "+put_mat.m_name<<"\n";
+            std::shared_ptr<Shape> temp_ptr=std::make_shared<Sphere>(
+            Sphere (sphere_name,myscene.MaterialMap[mat_name],sphere_center,sphere_radius));
+            myscene.ShapeVector.push_back(temp_ptr);
+            //sphere.print(std::cout);
             }
 
-                                     }
+                                     }} }}
+//Print Stuff..
+//std::cout<<"pointers"<<temp_ptr.use_count();
+std::cout<<"\n Print Loaded:\n";                                     
+myscene.Print_Shapes();
 
-
-
-
-
-                                } 
-                                      }
-                           }
-std::cout<<"PRINT VECTOR\n";
-  for (Material i : MaterialVec)
-  {
-    std::cout<<"Material:"+i.m_name+"\n";
-  }
-}
-
-
-
-
-
-
-
-
-
-
-int main(int argc, char *argv[])
-{
   return Catch::Session().run(argc, argv);
 }
