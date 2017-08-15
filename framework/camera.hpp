@@ -8,11 +8,15 @@ class Camera
 {
 public:
 	Camera(); //Default
-	Camera(std::string const& name, int fov, glm::vec3 const& pos, glm::vec3 const& dir , glm::vec3 const& up); //User
+	Camera(std::string const& name,int const& fov, glm::vec3 const& pos, glm::vec3 const& dir , glm::vec3 const& up); //User
 	~Camera(); //Destructor
 
 	//Getters
 	std::string const& get_name() const;
+	int const& get_fov() const;
+	glm::vec3 const& get_pos() const;
+	glm::vec3 const& get_dir() const;
+	glm::vec3 const& get_upvec() const;	
 
 	//DATA
 

@@ -9,6 +9,7 @@
 #include <ostream>
 #include <string>
 #include <memory>
+#include <vector>
 struct Scene
 {
     int x_resolution;
