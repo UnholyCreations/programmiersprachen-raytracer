@@ -5,6 +5,7 @@
 #include "sphere.hpp"
 #include "camera.hpp"
 #include "material.hpp"
+#include "light.hpp"
 #include <map>
 #include <iostream>
 #include <ostream>
@@ -18,6 +19,7 @@ struct Scene
     Camera SceneCamera;
 	std::map<std::string,Material> MaterialMap;
 	std::vector<std::shared_ptr<Shape>> ShapeVector;
+    std::vector<Light> LightVector;
 	void Print_Shapes()
 	{
 	for (int i=0;i<ShapeVector.size();i++) //if i dont mess the indices after a month pause its not me... :D
@@ -38,6 +40,13 @@ struct Scene
     void Print_Camera()
     {
         SceneCamera.print();
+    }
+    void Print_Lights()
+    {
+    for (Light l:LightVector)
+        {
+            l.print();
+        }
     }
 };
 
