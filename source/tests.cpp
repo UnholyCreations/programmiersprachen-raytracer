@@ -8,6 +8,7 @@
 #include "material.hpp"
 #include "camera.hpp"
 #include "scene.hpp"
+#include "light.hpp"
 #include <string>
 #include <fstream> 
 #include <sstream>
@@ -60,9 +61,24 @@ int main(int argc, char *argv[])
             ss>> mat_get_m;
             Material temp_mat(mat_get_name,mat_get_ka,mat_get_kd,mat_get_ks, mat_get_m);
             myscene.MaterialMap.insert({mat_get_name,temp_mat});
-
-
-        }
+            }
+            else if(keyword == "light")
+            {
+            std::string name;
+            glm::vec3 LightPos;
+            Color LightColor(0,0,0);
+            float Brightness;
+            ss>>name;
+            ss>>LightPos.x;
+            ss>>LightPos.y;
+            ss>>LightPos.z;
+            ss>>LightColor.r;
+            ss>>LightColor.g;
+            ss>>LightColor.b;
+            ss>>Brightness;
+            Light light(name,LightPos,LightColor,Brightness); 
+            myscene.LightVector.push_back(light);   
+            }
             else if(keyword == "shape"){
               ss>>keyword;
             if (keyword =="box")
@@ -132,6 +148,8 @@ int main(int argc, char *argv[])
             myscene.SceneCamera=temp_camera;
             }
 
+
+
                                      }} }}
 //Print Stuff..
 std::cout<<"\n________________________________________________________________________________________"; 
@@ -146,5 +164,9 @@ std::cout<<"\n__________________________________________________________________
 std::cout<<"\nPrint Loaded Camera:\n";  
 std::cout<<"________________________________________________________________________________________\n";  
 myscene.Print_Camera();
+std::cout<<"\n________________________________________________________________________________________"; 
+std::cout<<"\nPrint Loaded Lights:\n";  
+std::cout<<"________________________________________________________________________________________\n";  
+myscene.Print_Lights();
   return Catch::Session().run(argc, argv);
 }
