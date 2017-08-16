@@ -1,6 +1,8 @@
 #define CATCH_CONFIG_RUNNER
 #include <catch.hpp>
 #include "sdfloader.cpp" 
+#include "ray.hpp"
+#include "hit.hpp"
 TEST_CASE("LoadMat", "[LoaderMat]")
 {
 }

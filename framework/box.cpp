@@ -44,20 +44,20 @@ bool Box::intersect(Ray const& ray ,float& t)
 
 
 
-    float tx1 = (m_min.x-ray.origin.x)/ray.direction.x;
-    float tx2 = (m_max.x-ray.origin.x)/ray.direction.x;
+    float tx1 = (m_min.x-ray.m_origin.x)/ray.m_direction.x;
+    float tx2 = (m_max.x-ray.m_origin.x)/ray.m_direction.x;
  
     float tfarx=std::max(tx1, tx2);
     float tnearx=std::min(tx1, tx2);
 
-    float ty1 = (m_min.y-ray.origin.y)/ray.direction.y;
-    float ty2 = (m_max.y-ray.origin.y)/ray.direction.y;
+    float ty1 = (m_min.y-ray.m_origin.y)/ray.m_direction.y;
+    float ty2 = (m_max.y-ray.m_origin.y)/ray.m_direction.y;
   
     float tfary=std::max(ty1, ty2);
     float tneary=std::min(ty1, ty2);
 
-    float tz1 = (m_min.z-ray.origin.z)/ray.direction.z;
-    float tz2 = (m_max.z-ray.origin.z)/ray.direction.z;
+    float tz1 = (m_min.z-ray.m_origin.z)/ray.m_direction.z;
+    float tz2 = (m_max.z-ray.m_origin.z)/ray.m_direction.z;
 
     float tfarz=std::max(tz1, tz2);
     float tnearz=std::min(tz1, tz2);
