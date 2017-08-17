@@ -59,8 +59,7 @@ return os<<"\n"<<"Sphere: \n"<<"center:"<<m_center.x<<" "<<m_center.y<<" "<<m_ce
 bool Sphere::intersect(Ray const& ray, float& distance)
 {
     
-   auto norm_direction = glm::normalize(ray.m_direction);
-    auto result = glm::intersectRaySphere(ray.m_origin, norm_direction, m_center, m_radius * m_radius, distance);
+    auto result = glm::intersectRaySphere(ray.m_origin, glm::normalize(ray.m_direction), m_center, m_radius * m_radius, distance);
     return result;
     
 }

@@ -8,7 +8,7 @@
 // -----------------------------------------------------------------------------
 
 #include "renderer.hpp"
-
+#include <random>
 Renderer::Renderer(unsigned w, unsigned h, std::string const& file)
   : width_(w)
   , height_(h)
@@ -21,15 +21,23 @@ void Renderer::render()
 {
   const std::size_t checkersize = 20;
 
-  for (unsigned y = 0; y < height_; ++y) {
-    for (unsigned x = 0; x < width_; ++x) {
+  for (unsigned y = 0; y < (height_/2); ++y) {
+    std::uniform_real_distribution<float> distribution(0.0,1.0);
+    std::default_random_engine generator;
+    for (unsigned x = 0; x < (width_/2); ++x) {
       Pixel p(x,y);
-      if ( ((x/checkersize)%2) != ((y/checkersize)%2)) {
-        p.color = Color(0.0, 1.0, float(x)/height_);
-      } else {
-        p.color = Color(1.0, 0.0, float(y)/width_);
+      if (x%2==0)
+      {
+      p.color=Color(1,1,1);
       }
-
+      else
+      {
+      p.color=Color(0,0,0); 
+      };
+              
+      
+  
+      
       write(p);
     }
   }

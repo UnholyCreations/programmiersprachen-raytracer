@@ -28,7 +28,7 @@ struct GLFWwindow;
 class Window
 {
 public:
-  Window(glm::ivec2 const& windowsize = glm::ivec2(640, 480));
+  Window(glm::ivec2 const& windowsize = glm::ivec2(640, 480)); //!!!!!!!!!!!!!
   ~Window();
 
   enum MouseButton

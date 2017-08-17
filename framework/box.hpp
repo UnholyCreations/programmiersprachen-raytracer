@@ -3,6 +3,7 @@
 #define BUW_BOX_HPP
 #include "shape.hpp"
 #include "ray.hpp"
+#include "hit.hpp"
 #include <glm/vec3.hpp>
 #include <string>
 class Box: public Shape
