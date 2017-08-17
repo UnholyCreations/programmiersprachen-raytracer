@@ -11,9 +11,9 @@ class Shape; //Shape not declared? :D
 struct Hit
 {
 Hit();
-Hit(bool hit, float dist, glm::vec3 const& intersect,glm::vec3 const& norm, Shape* shape_ptr);
+Hit(bool hit, float distance, glm::vec3 const& intersect,glm::vec3 const& norm, Shape* shape_ptr);
 bool m_hit;
-float m_dist;
+float m_distance;
 glm::vec3 m_intersect;
 glm::vec3 m_norm;
 Shape* m_shape_ptr;

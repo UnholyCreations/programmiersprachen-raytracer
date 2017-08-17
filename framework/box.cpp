@@ -39,6 +39,8 @@ return os<<"Box: \n"<<"min coordinates:"<<m_min.x<<" "<<m_min.y<<" "<<m_min.z<<"
 
 }
 //https://people.csail.mit.edu/amy/papers/box-jgt.pdf
+//DID WE MISS SMTH?CONSTRUCTORS KILL BRAINCELLS...Struct/class creations functions more...
+//bool hit, float distance, glm::vec3 const& intersect,glm::vec3 const& norm (missing), Shape* shape_ptr
 Hit Box::intersect(Ray const& ray ,float& t)
 {
 
@@ -65,8 +67,10 @@ Hit Box::intersect(Ray const& ray ,float& t)
     float tfar=std::max(tfarx, tfary);
     float tnear=std::min(tnearx, tneary);
 
-    box_hit.m_dist = sqrt(ray.m_direction.x*ray.m_direction.x+ray.m_direction.y*ray.m_direction.y+ray.m_direction.z*ray.m_direction.z); 
+    box_hit.m_distance = sqrt(ray.m_direction.x*ray.m_direction.x+ray.m_direction.y*ray.m_direction.y+ray.m_direction.z*ray.m_direction.z); 
     box_hit.m_intersect = glm::vec3{tnear*ray.m_direction.x, tnear*ray.m_direction.y, tnear*ray.m_direction.z}+ray.m_origin;
+    box_hit.m_shape_ptr = this;
+   //bool hit:
    if(tfar<tnear)
    {
         box_hit.m_hit=false;
