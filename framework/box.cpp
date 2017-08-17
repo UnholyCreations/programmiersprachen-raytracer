@@ -39,10 +39,10 @@ return os<<"Box: \n"<<"min coordinates:"<<m_min.x<<" "<<m_min.y<<" "<<m_min.z<<"
 
 }
 //https://people.csail.mit.edu/amy/papers/box-jgt.pdf
-bool Box::intersect(Ray const& ray ,float& t)
+Hit Box::intersect(Ray const& ray ,float& t)
 {
 
-
+    Hit box_hit;
 
     float tx1 = (m_min.x-ray.m_origin.x)/ray.m_direction.x;
     float tx2 = (m_max.x-ray.m_origin.x)/ray.m_direction.x;
@@ -65,9 +65,12 @@ bool Box::intersect(Ray const& ray ,float& t)
     float tfar=std::max(tfarx, tfary);
     float tnear=std::min(tnearx, tneary);
 
+    box_hit.m_dist = sqrt(ray.m_direction.x*ray.m_direction.x+ray.m_direction.y*ray.m_direction.y+ray.m_direction.z*ray.m_direction.z); 
+    box_hit.m_intersect = glm::vec3{tnear*ray.m_direction.x, tnear*ray.m_direction.y, tnear*ray.m_direction.z}+ray.m_origin;
    if(tfar<tnear)
    {
-        return false;
+        box_hit.m_hit=false;
+        return box_hit;
    }
  
    tfar=std::min(tfar, tfarz);
@@ -75,8 +78,10 @@ bool Box::intersect(Ray const& ray ,float& t)
 
    if((tfar<0) || (tfar<tnear))
    {
-       return false;
+       box_hit.m_hit=false;
+       return box_hit;
    }
 
-   return true;
+   box_hit.m_hit=true;
+   return box_hit;
 }

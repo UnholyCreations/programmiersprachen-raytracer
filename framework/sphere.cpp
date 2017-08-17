@@ -56,10 +56,10 @@ return os<<"\n"<<"Sphere: \n"<<"center:"<<m_center.x<<" "<<m_center.y<<" "<<m_ce
 <<"radius:"<<m_radius<<"\n";
 }
 
-bool Sphere::intersect(Ray const& ray, float& distance)
+Hit Sphere::intersect(Ray const& ray, float& distance)
 {
-    
+ 	Hit sphere_hit;   
     auto result = glm::intersectRaySphere(ray.m_origin, glm::normalize(ray.m_direction), m_center, m_radius * m_radius, distance);
-    return result;
+    return sphere_hit;
     
 }
