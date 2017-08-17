@@ -14,8 +14,9 @@
 #include <vector>
 struct Scene
 {
-    int x_resolution;
-    int y_resolution;
+    std::string file_name;
+    unsigned int x_resolution;
+    unsigned int y_resolution;
     Camera SceneCamera;
 	std::map<std::string,Material> MaterialMap;
 	std::vector<std::shared_ptr<Shape>> ShapeVector;

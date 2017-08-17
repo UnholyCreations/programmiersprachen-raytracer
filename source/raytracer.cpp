@@ -5,14 +5,19 @@
 #include <thread>
 #include <utility>
 #include <cmath>
-
+#include "scene.hpp"
+#include "sdfloader.cpp"
 int main(int argc, char* argv[])
 {
   unsigned const width = 640;
   unsigned const height = 480;
   std::string const filename = "./checkerboard.ppm";
-
-  Renderer app{width, height, filename};
+  Scene loadedscene = sdf_loader();
+  loadedscene.x_resolution=width;
+  loadedscene.y_resolution=height;
+  //loadedscene.x_resolution=height;
+  //loadedscene.y_resolution=width;
+  Renderer app(loadedscene);
 
   std::thread thr([&app]() { app.render(); });
 

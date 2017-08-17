@@ -9,30 +9,42 @@
 
 #include "renderer.hpp"
 #include <random>
-Renderer::Renderer(unsigned w, unsigned h, std::string const& file)
-  : width_(w)
-  , height_(h)
-  , colorbuffer_(w*h, Color(0.0, 0.0, 0.0))
-  , filename_(file)
-  , ppm_(width_, height_)
-{}
+Renderer::Renderer():
+    scene_(),
+    colorbuffer_(scene_.x_resolution*scene_.y_resolution, Color{0,0,0}),
+    ppm_(scene_.x_resolution, scene_.y_resolution, "default_constrtor_img.ppm")
+    {}
+
+Renderer::Renderer(Scene const& scene):
+    scene_(scene),
+    colorbuffer_(scene.x_resolution*scene.y_resolution, Color{0,0,0}),
+    ppm_(scene.x_resolution, scene.y_resolution, scene.file_name)
+    {}
+
 
 void Renderer::render()
 {
   const std::size_t checkersize = 20;
 
-  for (unsigned y = 0; y < (height_/2); ++y) {
+  for (unsigned y = 0; y < (scene_.y_resolution); ++y) {
     std::uniform_real_distribution<float> distribution(0.0,1.0);
     std::default_random_engine generator;
-    for (unsigned x = 0; x < (width_/2); ++x) {
+    for (unsigned x = 0; x < (scene_.x_resolution); ++x) {
       Pixel p(x,y);
-      if (x%2==0)
+      if (x%32==0)
       {
       p.color=Color(1,1,1);
       }
       else
       {
+        if (y%32==0)
+        {
+        p.color=Color(1,1,1);  
+        }  
+        else
+        {
       p.color=Color(0,0,0); 
+        }
       };
               
       
@@ -41,13 +53,13 @@ void Renderer::render()
       write(p);
     }
   }
-  ppm_.save(filename_);
+  ppm_.save(scene_.file_name);
 }
 
 void Renderer::write(Pixel const& p)
 {
   // flip pixels, because of opengl glDrawPixels
-  size_t buf_pos = (width_*p.y + p.x);
+  size_t buf_pos = (scene_.x_resolution*p.y + p.x);
   if (buf_pos >= colorbuffer_.size() || (int)buf_pos < 0) {
     std::cerr << "Fatal Error Renderer::write(Pixel p) : "
       << "pixel out of ppm_ : "
