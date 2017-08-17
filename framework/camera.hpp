@@ -5,6 +5,9 @@
 #include <ostream>
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+//#include <glm/mat4.hpp>
+#include "ray.hpp"
 class Camera
 {
 public:
@@ -18,6 +21,10 @@ public:
 	glm::vec3 const& get_pos() const;
 	glm::vec3 const& get_dir() const;
 	glm::vec3 const& get_upvec() const;	
+	Ray const castray(glm::vec3 const& dir) const;
+	glm::mat4 CamTrans() const;
+
+
 	void print();
 	//DATA
 

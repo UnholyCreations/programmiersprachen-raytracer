@@ -5,10 +5,10 @@
     m_inverse{glm::vec3{-0,-0,-0}}
     {}
 
-    Ray::Ray(glm::vec3 origin, glm::vec3 direction,glm::vec3 inverse):
+    Ray::Ray(glm::vec3 origin, glm::vec3 direction):
     m_origin{origin},
     m_direction{direction},
-    m_inverse{inverse}
+    m_inverse{1.0/direction.x, 1.0/direction.y, 1.0/direction.z}
     {}
 	Ray Ray::transformRay(glm::mat4 const& mat)
 	{

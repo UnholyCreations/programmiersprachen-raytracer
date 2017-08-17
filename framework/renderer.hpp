@@ -24,6 +24,9 @@ public:
   void render();
   void write(Pixel const& p);
 
+  //Color raytrace(Ray const& ray);  //Prozedural kommt hier
+  //Color shades(Ray const& ray, Hit const& hit);
+
   inline std::vector<Color> const& colorbuffer() const
   {
     return colorbuffer_;

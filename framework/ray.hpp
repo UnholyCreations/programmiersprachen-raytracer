@@ -10,7 +10,7 @@ struct Ray
     glm::vec3 m_direction;
     glm::vec3 m_inverse;
     Ray();
-    Ray(glm::vec3 origin, glm::vec3 direction,glm::vec3 inverse);
+    Ray(glm::vec3 origin, glm::vec3 direction);
 
     glm::vec3 getorigin() const {
 	return m_origin;
