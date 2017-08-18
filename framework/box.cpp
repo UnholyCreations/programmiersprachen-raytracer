@@ -41,7 +41,7 @@ return os<<"Box: \n"<<"min coordinates:"<<m_min.x<<" "<<m_min.y<<" "<<m_min.z<<"
 //https://people.csail.mit.edu/amy/papers/box-jgt.pdf
 //DID WE MISS SMTH?CONSTRUCTORS KILL BRAINCELLS...Struct/class creations functions more...
 //bool hit, float distance, glm::vec3 const& intersect,glm::vec3 const& norm (missing), Shape* shape_ptr
-Hit Box::intersect(Ray const& ray ,float& t)
+Hit Box::intersect(Ray const& ray ,float t)
 {
 
     Hit box_hit;

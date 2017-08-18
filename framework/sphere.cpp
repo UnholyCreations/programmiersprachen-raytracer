@@ -59,7 +59,7 @@ return os<<"\n"<<"Sphere: \n"<<"center:"<<m_center.x<<" "<<m_center.y<<" "<<m_ce
 //DID WE MISS SMTH?CONSTRUCTORS KILL BRAINCELLS...Struct/class creations functions more...(the easier one)
 //bool hit, float distance, glm::vec3 const& intersect(missing),glm::vec3 const& norm (missing), Shape* shape_ptr
 
-Hit Sphere::intersect(Ray const& ray, float& distance)
+Hit Sphere::intersect(Ray const& ray, float distance)
 {
  	Hit sphere_hit;   
     sphere_hit.m_hit = glm::intersectRaySphere(ray.m_origin, glm::normalize(ray.m_direction), m_center, m_radius * m_radius, distance);

@@ -18,8 +18,8 @@ int main(int argc, char* argv[])
   //loadedscene.x_resolution=height;
   //loadedscene.y_resolution=width;
   Renderer app(loadedscene);
-
-  std::thread thr([&app]() { app.render(); });
+  app.render(); 
+  //std::thread thr([&app]() { app.render(); });
 
   Window win{glm::ivec2{width,height}};
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     win.show(app.colorbuffer());
   }
 
-  thr.join();
+  //thr.join();
 
   return 0;
 }

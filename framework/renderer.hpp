@@ -17,6 +17,7 @@
 #include <glm/glm.hpp>
 #include "scene.hpp"
 #include <cmath>
+#include <iostream>
 class Renderer
 {
 public:

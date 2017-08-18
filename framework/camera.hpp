@@ -21,8 +21,8 @@ public:
 	glm::vec3 const& get_pos() const;
 	glm::vec3 const& get_dir() const;
 	glm::vec3 const& get_upvec() const;	
-	Ray const castray(glm::vec3 const& dir) const;
-	glm::mat4 CamTrans() const;
+	Ray castray(int pixel_x, int pixel_y, int x_reso, int y_reso) const;
+	glm::mat4 const CamTrans() const;
 
 
 	void print();

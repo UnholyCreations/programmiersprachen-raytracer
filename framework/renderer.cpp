@@ -30,7 +30,7 @@ void Renderer::render()
     for (unsigned x = 0; x < scene_.x_resolution; ++x)
     {
     Pixel p(x,y);
-      Ray camera_ray = scene_.SceneCamera.castray(scene_.SceneCamera.m_dir);
+      Ray camera_ray = scene_.SceneCamera.castray(x,y,scene_.x_resolution, scene_.y_resolution);
       Color pixel_color = raytrace(camera_ray);
       p.color = pixel_color;
       write(p);
@@ -44,12 +44,12 @@ Color Renderer::raytrace(Ray const& ray)
   Hit first_hit;
   Color pixel_color=Color{0,0,0};
   double shortest = INFINITY; 
-  float null=0; //too lazy to change intersection stuff atm
   for (int i=0;i<scene_.ShapeVector.size();i++)
         {   
-        Hit hit=scene_.ShapeVector[i]->intersect(ray,null);
+        Hit hit=scene_.ShapeVector[i]->intersect(ray,shortest);
         if(hit.m_hit == true)
         {
+          std::cout<<"hit\n";
           if(hit.m_distance < shortest)
           {
           shortest = hit.m_distance;

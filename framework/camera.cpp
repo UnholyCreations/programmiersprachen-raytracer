@@ -43,8 +43,7 @@ void Camera::print()
         std::cout<<"dir:"<<m_dir.x<<" "<<m_dir.y<<" "<<m_dir.z<<"\n";
         std::cout<<"upvec:"<<m_up.x<<" "<<m_up.y<<" "<<m_up.z<<"\n";
 }
-glm::mat4 Camera::CamTrans() const
-{
+glm::mat4 const Camera::CamTrans() const{
   //m_pos=eye
   //m_up hat man schon
   glm::vec3 n = glm::normalize(m_dir);
@@ -61,9 +60,12 @@ glm::mat4 Camera::CamTrans() const
 
   return CamTrans; 
 } 
-Ray const Camera::castray(glm::vec3 const& dir) const
-{
-  Ray ray{{0.0f,0.0f,0.0f}, m_dir};
-  ray.transformRay(CamTrans());
-  return ray;
+Ray Camera::castray(int pixel_x, int pixel_y, int x_reso, int y_reso) const {
+
+    glm::vec3 direction{float(pixel_x) * 1.0 / float(x_reso),float(pixel_y) * 1.0 / float(y_reso), -1.0 * (0.5 / tan(m_fov/2))}; 
+  
+    Ray camRay{m_pos, -direction};
+    glm::mat4 Transformed= CamTrans();
+
+    return camRay.transformRay(Transformed);
 }
