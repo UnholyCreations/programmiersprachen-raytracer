@@ -121,6 +121,7 @@ Scene sdf_loader()
             myscene.ShapeVector.push_back(temp_ptr);
         
             }
+        }
             else if(keyword == "camera"){
   
             std::string name;
@@ -146,7 +147,7 @@ Scene sdf_loader()
 
 
 
-                                     }} }}
+                                     } }}
 //Print Stuff..
 std::cout<<"\n________________________________________________________________________________________"; 
 std::cout<<"\nPrint Loaded Shapes:\n";  
