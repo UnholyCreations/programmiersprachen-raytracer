@@ -24,36 +24,48 @@ Renderer::Renderer(Scene const& scene):
 
 void Renderer::render()
 {
-  const std::size_t checkersize = 20;
 
-  for (unsigned y = 0; y < (scene_.y_resolution); ++y) {
-    std::uniform_real_distribution<float> distribution(0.0,1.0);
-    std::default_random_engine generator;
-    for (unsigned x = 0; x < (scene_.x_resolution); ++x) {
-      Pixel p(x,y);
-      if (x%32==0)
-      {
-      p.color=Color(1,1,1);
-      }
-      else
-      {
-        if (y%32==0)
-        {
-        p.color=Color(1,1,1);  
-        }  
-        else
-        {
-      p.color=Color(0,0,0); 
-        }
-      };
-              
-      
-  
-      
+  for (unsigned y = 0; y < scene_.y_resolution; ++y)
+  { 
+    for (unsigned x = 0; x < scene_.x_resolution; ++x)
+    {
+    Pixel p(x,y);
+      Ray camera_ray = scene_.SceneCamera.castray(scene_.SceneCamera.m_dir);
+      Color pixel_color = raytrace(camera_ray);
+      p.color = pixel_color;
       write(p);
     }
+  }   
+    ppm_.save(scene_.file_name);
+}
+
+Color Renderer::raytrace(Ray const& ray)
+{
+  Hit first_hit;
+  Color pixel_color=Color{0,0,0};
+  double shortest = INFINITY; 
+  float null=0; //too lazy to change intersection stuff atm
+  for (int i=0;i<scene_.ShapeVector.size();i++)
+        {   
+        Hit hit=scene_.ShapeVector[i]->intersect(ray,null);
+        if(hit.m_hit == true)
+        {
+          if(hit.m_distance < shortest)
+          {
+          shortest = hit.m_distance;
+          first_hit = hit;
+          }
+        }
+        };
+  if(shortest == INFINITY)
+  {
+  pixel_color = Color{0,0,0};
   }
-  ppm_.save(scene_.file_name);
+  else
+  {
+  pixel_color = Color{1,1,1};
+  }
+  return pixel_color;
 }
 
 void Renderer::write(Pixel const& p)
