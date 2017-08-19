@@ -25,12 +25,13 @@ Renderer::Renderer(Scene const& scene):
 void Renderer::render()
 {
 
-  for (unsigned y = 0; y < scene_.y_resolution; ++y)
+  for (int y = 0; y < scene_.y_resolution; ++y)
   { 
-    for (unsigned x = 0; x < scene_.x_resolution; ++x)
+    for (int x = 0; x < scene_.x_resolution; ++x)
     {
     Pixel p(x,y);
-      Ray camera_ray = scene_.SceneCamera.castray(x,y,scene_.x_resolution, scene_.y_resolution);
+      Ray camera_ray = scene_.SceneCamera.castray(x-(scene_.x_resolution/2),y-(scene_.y_resolution/2)
+      ,scene_.x_resolution/2, scene_.y_resolution/2);
       Color pixel_color = raytrace(camera_ray);
       p.color = pixel_color;
       write(p);
