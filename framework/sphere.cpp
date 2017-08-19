@@ -62,8 +62,11 @@ return os<<"\n"<<"Sphere: \n"<<"center:"<<m_center.x<<" "<<m_center.y<<" "<<m_ce
 Hit Sphere::intersect(Ray const& ray)
 {
  	Hit sphere_hit;   
-    sphere_hit.m_hit = glm::intersectRaySphere(ray.m_origin, glm::normalize(ray.m_direction), m_center
-    , m_radius*m_radius, sphere_hit.m_intersect,sphere_hit.m_norm);
+    sphere_hit.m_hit = glm::intersectRaySphere(
+    ray.m_origin, glm::normalize(ray.m_direction),
+     m_center,m_radius, 
+     sphere_hit.m_intersect,sphere_hit.m_norm);
+
     sphere_hit.m_distance = glm::distance(ray.m_origin, sphere_hit.m_intersect);
 	sphere_hit.m_shape_ptr = this;
     return sphere_hit;
