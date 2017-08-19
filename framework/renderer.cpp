@@ -46,7 +46,7 @@ Color Renderer::raytrace(Ray const& ray)
   double shortest = INFINITY; 
   for (int i=0;i<scene_.ShapeVector.size();i++)
         {   
-        Hit hit=scene_.ShapeVector[i]->intersect(ray,shortest);
+        Hit hit=scene_.ShapeVector[i]->intersect(ray);
         if(hit.m_hit == true)
         {
           std::cout<<"hit\n";

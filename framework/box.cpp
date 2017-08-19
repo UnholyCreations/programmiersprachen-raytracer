@@ -41,25 +41,25 @@ return os<<"Box: \n"<<"min coordinates:"<<m_min.x<<" "<<m_min.y<<" "<<m_min.z<<"
 //https://people.csail.mit.edu/amy/papers/box-jgt.pdf
 //DID WE MISS SMTH?CONSTRUCTORS KILL BRAINCELLS...Struct/class creations functions more...
 //bool hit, float distance, glm::vec3 const& intersect,glm::vec3 const& norm (missing), Shape* shape_ptr
-Hit Box::intersect(Ray const& ray ,float t)
+Hit Box::intersect(Ray const& ray)
 {
 
     Hit box_hit;
 
-    float tx1 = (m_min.x-ray.m_origin.x)/ray.m_direction.x;
-    float tx2 = (m_max.x-ray.m_origin.x)/ray.m_direction.x;
+    float tx1 = (m_min.x-ray.m_origin.x)*ray.m_inverse.x;
+    float tx2 = (m_max.x-ray.m_origin.x)*ray.m_inverse.x;
  
     float tfarx=std::max(tx1, tx2);
     float tnearx=std::min(tx1, tx2);
 
-    float ty1 = (m_min.y-ray.m_origin.y)/ray.m_direction.y;
-    float ty2 = (m_max.y-ray.m_origin.y)/ray.m_direction.y;
+    float ty1 = (m_min.y-ray.m_origin.y)*ray.m_inverse.y;
+    float ty2 = (m_max.y-ray.m_origin.y)*ray.m_inverse.y;
   
     float tfary=std::max(ty1, ty2);
     float tneary=std::min(ty1, ty2);
 
-    float tz1 = (m_min.z-ray.m_origin.z)/ray.m_direction.z;
-    float tz2 = (m_max.z-ray.m_origin.z)/ray.m_direction.z;
+    float tz1 = (m_min.z-ray.m_origin.z)*ray.m_inverse.z;
+    float tz2 = (m_max.z-ray.m_origin.z)*ray.m_inverse.z;
 
     float tfarz=std::max(tz1, tz2);
     float tnearz=std::min(tz1, tz2);

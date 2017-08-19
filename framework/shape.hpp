@@ -22,7 +22,7 @@ public:
   virtual double area() const = 0;
   virtual double volume() const = 0;
   virtual std::ostream & print (std::ostream & os) const=0;
-  virtual Hit intersect(Ray const& ray ,float t) = 0;
+  virtual Hit intersect(Ray const& ray) = 0;
   //Const Attributes
   std::string get_name() const; 
   Material get_material() const;
