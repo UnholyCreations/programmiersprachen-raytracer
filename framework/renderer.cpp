@@ -49,7 +49,6 @@ Color Renderer::raytrace(Ray const& ray)
         Hit hit=scene_.ShapeVector[i]->intersect(ray);
         if(hit.m_hit == true)
         {
-          std::cout<<"hit\n";
           if(hit.m_distance < shortest)
           {
           shortest = hit.m_distance;

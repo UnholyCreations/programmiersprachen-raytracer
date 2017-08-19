@@ -7,12 +7,12 @@ Camera::Camera():
   m_dir {0, 0, -1},
   m_up {0, 1, 0}
   {}
-Camera::Camera(std::string const& name,int const& fov, glm::vec3 const& pos, glm::vec3 const& dir, glm::vec3 const& up):
+Camera::Camera(std::string const& name,int const& fov):
   m_name (name),
   m_fov (fov),
-  m_pos {pos},
-  m_dir {dir},
-  m_up {up}
+  m_pos {0,0,fov},
+  m_dir {0,0,-1},
+  m_up {0,1,0}
   {}
 Camera::~Camera(){}
 
