@@ -4,8 +4,9 @@
 #include "shape.hpp"
 #include "ray.hpp"
 #include "hit.hpp"
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 #include <string>
+#include <cmath>
 class Box: public Shape
 {
 private:

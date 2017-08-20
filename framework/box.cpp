@@ -39,53 +39,37 @@ return os<<"Box: \n"<<"min coordinates:"<<m_min.x<<" "<<m_min.y<<" "<<m_min.z<<"
 
 }
 //https://people.csail.mit.edu/amy/papers/box-jgt.pdf
+//https://tavianator.com/fast-branchless-raybounding-box-intersections-part-2-nans/#cite-1
 //DID WE MISS SMTH?CONSTRUCTORS KILL BRAINCELLS...Struct/class creations functions more...
 //bool hit, float distance, glm::vec3 const& intersect,glm::vec3 const& norm (missing), Shape* shape_ptr
 Hit Box::intersect(Ray const& ray)
 {
+Hit box_hit;
+float tmin = -INFINITY, tmax = INFINITY;
 
-    Hit box_hit;
+//stepX
+float t1=(m_min.x-ray.m_origin.x)*ray.m_inverse.x;
+float t2=(m_max.x-ray.m_origin.x)*ray.m_inverse.x;
+tmin = std::max(tmin, std::min(t1, t2));
+tmax = std::min(tmax, std::max(t1, t2));
+//stepY
+t1=(m_min.y-ray.m_origin.y)*ray.m_inverse.y;
+t2=(m_max.y-ray.m_origin.y)*ray.m_inverse.y;
+tmin = std::max(tmin, std::min(t1, t2));
+tmax = std::min(tmax, std::max(t1, t2));
+//stepZ
+t1=(m_min.z-ray.m_origin.z)*ray.m_inverse.z;
+t2=(m_max.z-ray.m_origin.z)*ray.m_inverse.z;
+tmin = std::max(tmin, std::min(t1, t2));
+tmax = std::min(tmax, std::max(t1, t2));
+if (tmax > std::max(tmin, 0.0f))
+{
+  box_hit.m_hit=true;
+  box_hit.m_shape_ptr = this;
+  box_hit.m_distance = tmin*(ray.m_direction.x+ray.m_direction.y+ray.m_direction.z);
+  box_hit.m_intersect=glm::vec3{tmin*ray.m_direction.x, tmin*ray.m_direction.y, tmin*ray.m_direction.z}+ray.m_origin;
+}
 
-    float tx1 = (m_min.x-ray.m_origin.x)*ray.m_inverse.x;
-    float tx2 = (m_max.x-ray.m_origin.x)*ray.m_inverse.x;
- 
-    float tfarx=std::max(tx1, tx2);
-    float tnearx=std::min(tx1, tx2);
 
-    float ty1 = (m_min.y-ray.m_origin.y)*ray.m_inverse.y;
-    float ty2 = (m_max.y-ray.m_origin.y)*ray.m_inverse.y;
-  
-    float tfary=std::max(ty1, ty2);
-    float tneary=std::min(ty1, ty2);
-
-    float tz1 = (m_min.z-ray.m_origin.z)*ray.m_inverse.z;
-    float tz2 = (m_max.z-ray.m_origin.z)*ray.m_inverse.z;
-
-    float tfarz=std::max(tz1, tz2);
-    float tnearz=std::min(tz1, tz2);
-
-    float tfar=std::max(tfarx, tfary);
-    float tnear=std::min(tnearx, tneary);
-
-    box_hit.m_distance = sqrt(ray.m_direction.x*ray.m_direction.x+ray.m_direction.y*ray.m_direction.y+ray.m_direction.z*ray.m_direction.z); 
-    box_hit.m_intersect = glm::vec3{tnear*ray.m_direction.x, tnear*ray.m_direction.y, tnear*ray.m_direction.z}+ray.m_origin;
-    box_hit.m_shape_ptr = this;
-   //bool hit:
-   if(tfar<tnear)
-   {
-        box_hit.m_hit=false;
-        return box_hit;
-   }
- 
-   tfar=std::min(tfar, tfarz);
-   tnear=std::max(tnear, tnearz);
-
-   if((tfar<0) || (tfar<tnear))
-   {
-       box_hit.m_hit=false;
-       return box_hit;
-   }
-
-   box_hit.m_hit=true;
-   return box_hit;
+return box_hit;
 }
