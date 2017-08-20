@@ -32,6 +32,14 @@ Scene sdf_loader()
 
         ss<<line;
         ss>>keyword;
+              if (keyword=="ambient")
+                {  
+                Color scene_ambience{0,0,0}; 
+                ss>>scene_ambience.r;
+                ss>>scene_ambience.g;
+                ss>>scene_ambience.b;
+                myscene.SceneAmbience=scene_ambience;
+                }  
 
         if(keyword == "define"){
           ss>>keyword;
@@ -73,7 +81,8 @@ Scene sdf_loader()
             ss>>LightColor.b;
             ss>>Brightness;
             Light light(name,LightPos,LightColor,Brightness); 
-            myscene.LightVector.push_back(light);   
+            myscene.LightVector.push_back(light);
+
             }
             else if(keyword == "shape"){
               ss>>keyword;
@@ -119,7 +128,7 @@ Scene sdf_loader()
             std::shared_ptr<Shape> temp_ptr=std::make_shared<Sphere>(
             Sphere (sphere_name,myscene.MaterialMap[mat_name],sphere_center,sphere_radius));
             myscene.ShapeVector.push_back(temp_ptr);
-        
+            
             }
         }
             else if(keyword == "camera"){
@@ -136,6 +145,7 @@ Scene sdf_loader()
 
                                      } }}
 //Print Stuff..
+                                    
 std::cout<<"\n________________________________________________________________________________________"; 
 std::cout<<"\nPrint Loaded Shapes:\n";  
 std::cout<<"________________________________________________________________________________________\n";                                      
@@ -152,5 +162,9 @@ std::cout<<"\n__________________________________________________________________
 std::cout<<"\nPrint Loaded Lights:\n";  
 std::cout<<"________________________________________________________________________________________\n";  
 myscene.Print_Lights();
+std::cout<<"________________________________________________________________________________________\n";  
+std::cout<<"\nPrint Loaded Ambience:\n";  
+std::cout<<"________________________________________________________________________________________\n";  
+myscene.Print_Ambience();
 return myscene;
 }

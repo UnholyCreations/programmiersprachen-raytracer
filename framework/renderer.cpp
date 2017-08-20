@@ -63,10 +63,17 @@ Color Renderer::raytrace(Ray const& ray)
   }
   else
   {
-  pixel_color=first_hit.m_shape_ptr->get_material().m_ka;
+  pixel_color=shades(first_hit);
   }
   return pixel_color;
 }
+Color Renderer::shades(Hit const& hit)
+{
+  Color Ia=scene_.SceneAmbience;
+  Color ka=hit.m_shape_ptr->get_material().m_ka;
+  return Ia*ka;
+}
+
 
 void Renderer::write(Pixel const& p)
 {

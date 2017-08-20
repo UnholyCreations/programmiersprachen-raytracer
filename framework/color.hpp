@@ -41,6 +41,21 @@ struct Color
     return *this;
   }
 
+   Color& operator*=(Color const& other)
+  {
+    r *= other.r;
+    g *= other.g;
+    b *= other.b;
+    return *this;
+  }
+     Color& operator/=(Color const& other)
+  {
+    r /= other.r;
+    g /= other.g;
+    b /= other.b;
+    return *this;
+  }
+
   friend Color operator+(Color const& a, Color const& b)
   {
     auto tmp(a);
@@ -54,6 +69,21 @@ struct Color
     tmp -= b;
     return tmp;
   }
+
+  friend Color operator*(Color const& a, Color const& b)
+  {
+    auto tmp(a);
+    tmp *= b;
+    return tmp;
+  }
+
+    friend Color operator/(Color const& a, Color const& b)
+  {
+    auto tmp(a);
+    tmp /= b;
+    return tmp;
+  }
+
 };
 
 #endif //#define BUW_COLOR_HPP

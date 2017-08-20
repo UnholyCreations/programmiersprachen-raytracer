@@ -21,6 +21,7 @@ struct Scene
 	std::map<std::string,Material> MaterialMap;
 	std::vector<std::shared_ptr<Shape>> ShapeVector;
     std::vector<Light> LightVector;
+    Color SceneAmbience{0,0,0};
 	void Print_Shapes()
 	{
 	for (int i=0;i<ShapeVector.size();i++) //if i dont mess the indices after a month pause its not me... :D
@@ -48,6 +49,10 @@ struct Scene
         {
             l.print();
         }
+    }
+    void Print_Ambience()
+    {
+        std::cout<<"col:"<<SceneAmbience.r<<" "<<SceneAmbience.g<<" "<<SceneAmbience.b<<"\n";
     }
 };
 
