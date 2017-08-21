@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <cmath>
+#include <catch.hpp>
 class Box: public Shape
 {
 private:
