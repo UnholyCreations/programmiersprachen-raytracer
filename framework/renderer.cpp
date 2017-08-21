@@ -70,13 +70,15 @@ Color Renderer::raytrace(Ray const& ray)
 Color Renderer::shades(Hit const& hit)
 {
   Color Ia=addambient(hit);
+  Color Is=addspecular(hit);
   Color Id=adddiffuse(hit);
-  Color I=Id+Ia;
-
-
+  //Color I=Is;
+  Color I=Ia+Is+Id;
   return I;
 
 }
+
+
 
 Color Renderer::addambient(Hit const& hit)
 {
@@ -85,26 +87,60 @@ Color Renderer::addambient(Hit const& hit)
 
 return Ia*ka;
 }
-
+//https://stackoverflow.com/questions/31064234/find-the-angle-between-two-vectors-from-an-arbitrary-origin#31064328
+//Never forget the credit ;)
 Color Renderer::adddiffuse(Hit const& hit)
 {
 Color kd=hit.m_shape_ptr->get_material().m_kd;
 Color Id={0,0,0};
 glm::vec3 internorm =glm::normalize(hit.m_norm);
 float anglecosine = 0.0f;
+float dotproduct =0.0f;
+float Ip_RGB=0.0f;
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           
           glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
-          float dotproduct = glm::dot(internorm,lightnorm); 
+          dotproduct = glm::dot(internorm,lightnorm); 
           anglecosine = cos(acos(dotproduct));
-          float Ip_RGB=scene_.LightVector[i].m_brightness;
+          Ip_RGB=scene_.LightVector[i].m_brightness;
           Color Ip_mit_cos{Ip_RGB*anglecosine,Ip_RGB*anglecosine,Ip_RGB*anglecosine};
          Id=Id+kd*Ip_mit_cos;
         }
     return Id;
 }
 
+Color Renderer::addspecular(Hit const& hit)
+{
+Color ks=hit.m_shape_ptr->get_material().m_ks;
+float m=hit.m_shape_ptr->get_material().m_m;
+Color Is={0,0,0};
+glm::vec3 internorm =glm::normalize(hit.m_norm); //N
+float anglecosine = 0.0f;
+float dotproduct =0.0f;
+float Ip_RGB=0.0f;
+    for (int i=0;i<scene_.LightVector.size();i++)
+        {
+          
+          glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos); //L
+          glm::vec3 cameranorm =glm::normalize(hit.m_intersect-scene_.SceneCamera.m_pos); //V
+          glm::vec3 reflect=2*glm::dot(internorm,lightnorm)*internorm-lightnorm; //R
+          float RdotVpowM=pow(glm::dot(reflect,lightnorm),m);
+          Ip_RGB=scene_.LightVector[i].m_brightness;
+          Color Ip_RGB_mod={Ip_RGB*RdotVpowM,Ip_RGB*RdotVpowM,Ip_RGB*RdotVpowM};
+          Is=Is+ks*Ip_RGB_mod;
+           //(2*lDotN)*N – L
+          //Phong Component = ks*lightSourceColor*(RDotV^n)
+          /*
+          dotproduct = glm::dot(internorm,lightnorm); 
+          anglecosine = cos(acos(dotproduct));
+          Ip_RGB=scene_.LightVector[i].m_brightness;
+          Color Ip_mit_cos{Ip_RGB*anglecosine,Ip_RGB*anglecosine,Ip_RGB*anglecosine};
+         Is=Is+ks*Ip_mit_cos;
+         */
+        }
+    return Is;
+}
 
 
 void Renderer::write(Pixel const& p)

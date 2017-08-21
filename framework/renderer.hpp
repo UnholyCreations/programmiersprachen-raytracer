@@ -31,7 +31,8 @@ public:
   Color shades(Hit const& hit);
   Color addambient(Hit const& hit);
   Color adddiffuse(Hit const& hit);
-
+  Color addspecular(Hit const& hit);
+  
   inline std::vector<Color> const& colorbuffer() const
   {
     return colorbuffer_;
