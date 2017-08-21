@@ -59,7 +59,7 @@ Color Renderer::raytrace(Ray const& ray)
         };
   if(shortest == INFINITY)
   {
-  pixel_color = Color{0,0,0};
+  pixel_color = Color{scene_.SceneAmbience.r,scene_.SceneAmbience.g,scene_.SceneAmbience.b};
   }
   else
   {
@@ -69,38 +69,42 @@ Color Renderer::raytrace(Ray const& ray)
 }
 Color Renderer::shades(Hit const& hit)
 {
-  Color Ia=scene_.SceneAmbience;
-  Color ka=hit.m_shape_ptr->get_material().m_ka;
-  Color kd=hit.m_shape_ptr->get_material().m_kd;
-  Color I=Ia*ka;
-  //glm::vec3 intersectpos=hit.m_intersect;
-  //std::cout<<intersectpos.x<<" "<<intersectpos.y<<" "<<intersectpos.z<<"\n";
-  for (int i=0;i<scene_.LightVector.size();i++)
-        {   
-          glm::vec3 internorm =glm::normalize(hit.m_norm);
-          glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
-          //glm::vec3 lightnorm =scene_.LightVector[i].m_pos;
-          float dotproduct = glm::dot(internorm,lightnorm); 
-          float anglecosine = cos(acos(dotproduct));
-          //std::cout<<std::fixed<<"angle: "<<cos(acos(dotproduct))<<"\n";
-          //std::cout<<"brightbright:"<<scene_.LightVector[i].m_brightness<<"\n";
-          float Ip_RGB=scene_.LightVector[i].m_brightness;
-          Color Ip_mit_cos{Ip_RGB*anglecosine,Ip_RGB*anglecosine,Ip_RGB*anglecosine};
-          Color Id=kd*Ip_mit_cos;
+  Color Ia=addambient(hit);
+  Color Id=adddiffuse(hit);
+  Color I=Id+Ia;
 
-          //std::cout<<internorm.x<<" "<<internorm.y<<" "<<internorm.z<<"\n";
-          //std::cout<<lightnorm.x<<" "<<lightnorm.y<<" "<<lightnorm.z<<"\n";
-        //glm::vec3 tolight = glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
-        //std::cout<<tolight.x<<" "<<tolight.y<<" "<<tolight.z<<"\n";
-        //Ray lightray{hit.m_intersect, tolight};
-        Color I=I+Id;
-        return I;
-        }
-      
 
-  //return I;
+  return I;
 
 }
+
+Color Renderer::addambient(Hit const& hit)
+{
+  Color Ia=scene_.SceneAmbience;
+  Color ka=hit.m_shape_ptr->get_material().m_ka;
+
+return Ia*ka;
+}
+
+Color Renderer::adddiffuse(Hit const& hit)
+{
+Color kd=hit.m_shape_ptr->get_material().m_kd;
+Color Id={0,0,0};
+glm::vec3 internorm =glm::normalize(hit.m_norm);
+float anglecosine = 0.0f;
+    for (int i=0;i<scene_.LightVector.size();i++)
+        {
+          
+          glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
+          float dotproduct = glm::dot(internorm,lightnorm); 
+          anglecosine = cos(acos(dotproduct));
+          float Ip_RGB=scene_.LightVector[i].m_brightness;
+          Color Ip_mit_cos{Ip_RGB*anglecosine,Ip_RGB*anglecosine,Ip_RGB*anglecosine};
+         Id=Id+kd*Ip_mit_cos;
+        }
+    return Id;
+}
+
 
 
 void Renderer::write(Pixel const& p)
