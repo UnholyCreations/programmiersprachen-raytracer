@@ -98,20 +98,28 @@ Color ks=hit.m_shape_ptr->get_material().m_ks;
 float m=hit.m_shape_ptr->get_material().m_m;
 Color Is={0,0,0};
 glm::vec3 internorm =glm::normalize(hit.m_norm); //N
+Color Ids={0,0,0};
+Color UnShadows{1,1,1};
+float ShadowBias = 1.1f;
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
-          /*
-          Ray shadowray {hit.m_intersect,lightnorm};
+          
+          Ray shadowray {internorm,lightnorm};
+          
           for (int i=0;i<scene_.ShapeVector.size();i++)
           {   
           Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);
           if (shadowhit.m_hit==true) {
+              UnShadows={0,0,0};
             std::cout<<"hit!\n"; 
-             return Color{0,0,0};
+           }
+           else
+           {
+            UnShadows={1,1,1};
            };
           }
-          */
+          
           dotproduct = glm::dot(internorm,lightnorm); 
           anglecosine = cos(acos(dotproduct));
           Ip_RGB=scene_.LightVector[i].m_brightness;
@@ -123,8 +131,10 @@ glm::vec3 internorm =glm::normalize(hit.m_norm); //N
           Ip_RGB=scene_.LightVector[i].m_brightness;
           Color Ip_RGB_mod={Ip_RGB*RdotVpowM,Ip_RGB*RdotVpowM,Ip_RGB*RdotVpowM};
           Is=Is+ks*Ip_RGB_mod;
+
+          Ids=(Is+Id)*UnShadows;
         }
-    return Id+Is;
+    return Ids;
 }
 
 
