@@ -62,9 +62,9 @@ glm::mat4 const Camera::CamTrans() const{
 } 
 Ray Camera::castray(int pixel_x, int pixel_y, int x_reso, int y_reso) const {
 
-    glm::vec3 direction{float(pixel_x) * 1.0 / float(x_reso),float(pixel_y) * 1.0 / float(y_reso), -1.0 * (0.5 / tan(m_fov/2))}; 
+    glm::vec3 direction{float(pixel_x) * 1.0 / float(x_reso),float(pixel_y) * 1.0 / float(y_reso), -1.0 * (0.5 / tan(m_fov/2*M_PI/360))}; 
   
-    Ray camRay{m_pos, -direction};
+    Ray camRay{m_pos, direction};
     glm::mat4 Transformed= CamTrans();
 
     return camRay.transformRay(Transformed);
