@@ -70,7 +70,6 @@ Hit Sphere::intersect(Ray const& ray)
     sphere_hit.m_distance = glm::distance(ray.m_origin, sphere_hit.m_intersect);
 	sphere_hit.m_shape_ptr = this;
 
-	//sphere_hit.m_norm=glm::vec3(1.0f,0.0f,0.0f);
 	sphere_hit.m_norm=glm::normalize(m_center-sphere_hit.m_intersect);
     return sphere_hit;
     

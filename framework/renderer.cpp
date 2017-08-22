@@ -70,9 +70,7 @@ Color Renderer::raytrace(Ray const& ray)
 Color Renderer::shades(Hit const& hit)
 {
   Color Ia=addambient(hit);
-  //Color Is=addspecular(hit);
-  Color Ids=adddiffuse(hit);
-  //Color I=Is;
+  Color Ids=adddiffusespecular(hit);
   Color I=Ia+Ids;
   return I;
 
@@ -89,7 +87,7 @@ return Ia*ka;
 }
 //https://stackoverflow.com/questions/31064234/find-the-angle-between-two-vectors-from-an-arbitrary-origin#31064328
 //Never forget the credit ;)
-Color Renderer::adddiffuse(Hit const& hit)
+Color Renderer::adddiffusespecular(Hit const& hit)
 {
 Color kd=hit.m_shape_ptr->get_material().m_kd;
 Color Id={0,0,0};
@@ -102,8 +100,18 @@ Color Is={0,0,0};
 glm::vec3 internorm =glm::normalize(hit.m_norm); //N
     for (int i=0;i<scene_.LightVector.size();i++)
         {
-          
           glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
+          /*
+          Ray shadowray {hit.m_intersect,lightnorm};
+          for (int i=0;i<scene_.ShapeVector.size();i++)
+          {   
+          Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);
+          if (shadowhit.m_hit==true) {
+            std::cout<<"hit!\n"; 
+             return Color{0,0,0};
+           };
+          }
+          */
           dotproduct = glm::dot(internorm,lightnorm); 
           anglecosine = cos(acos(dotproduct));
           Ip_RGB=scene_.LightVector[i].m_brightness;
