@@ -100,20 +100,21 @@ Color Is={0,0,0};
 glm::vec3 internorm =glm::normalize(hit.m_norm); //N
 Color Ids={0,0,0};
 Color UnShadows{1,1,1};
-float ShadowBias = 0.1f;
+float ShadowBias = 0.01f;
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
           
-          Ray shadowray {hit.m_norm,lightnorm};
+          Ray shadowray {hit.m_intersect+hit.m_intersect*ShadowBias,scene_.LightVector[i].m_pos};
           
           for (int i=0;i<scene_.ShapeVector.size();i++)
           {   
           Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);
           if (shadowhit.m_hit==true) {
-              //UnShadows={0,0,0};
+              std::cout<<"hit!\n"; 
+              UnShadows={0,0,0};
               break;
-            std::cout<<"hit!\n"; 
+            
            }
            else
            {

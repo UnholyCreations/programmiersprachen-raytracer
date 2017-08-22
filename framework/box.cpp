@@ -66,7 +66,7 @@ if (tmax > std::max(tmin, 0.0f))
 {
   box_hit.m_hit=true;
   box_hit.m_shape_ptr = this;
-  box_hit.m_distance = tmin*(ray.m_direction.x+ray.m_direction.y+ray.m_direction.z);
+  box_hit.m_distance = sqrt((tmin*tmin)*(ray.m_direction.x*ray.m_direction.x+ray.m_direction.y*ray.m_direction.y+ray.m_direction.z*ray.m_direction.z));
   box_hit.m_intersect=glm::vec3{tmin*ray.m_direction.x, tmin*ray.m_direction.y, tmin*ray.m_direction.z}+ray.m_origin;
    if ((box_hit.m_intersect.x)==Approx(m_max.x))
         {
