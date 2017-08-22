@@ -112,6 +112,7 @@ float ShadowBias = 1.1f;
           Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);
           if (shadowhit.m_hit==true) {
               UnShadows={0,0,0};
+              break;
             std::cout<<"hit!\n"; 
            }
            else
