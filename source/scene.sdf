@@ -1,9 +1,27 @@
 # materials
-define material red 1 0 0 1 0 0 1 0 0 10
-define material blue 0 0 1 0 0 1 0 0 1 10
+
+define material red  15 0 0 0.8 0 0 0.2 0.2 0.2 5
+define material blue 0 0 15 0 0 0.8 0.3 0.3 0.3 5
+define material green 0 15 0 0 0.8 0 0.3 0.3 0.3 5
+define material yellow 15 15 0 0.8 0.8 0 0.3 0.3 0.3 5
+define material purple 0 15 15 0 0.8 0.8 0.3 0.3 0.3 5
+define material red2  1 0 0 0.8 0 0 0 0 0 0
+define material green2  0 1 0 0 0.8 0 0 0 0 0
+define material blue2  0 0 1 0 0 0.8 0 0 0 0
 # geometry
-define shape box rbottom -100 -80 -200 100 80 -100 red
-define shape sphere bsphere 0 0 -100 50 blue
+define shape sphere sphere1 60 150 -30 50 blue
+define shape sphere sphere2 0 50 -100 50 red
+define shape sphere sphere3 100 30 -70 50 green
+define shape sphere sphere4 -100 60 -40 50 purple
+define shape sphere sphere5 -75 150 -20 30 yellow
+define shape box box1 420 150 -100 320 250 -150 green2
+define shape box box2 420 0 -100 320 100 -150 red2
+define shape box box3 420 300 -100 320 450 -150 blue2
+define shape box box1 -420 150 -100 -320 250 -150 green2
+define shape box box2 -400 0 -100 -300 100 -150 red2
+define shape box box3 -420 300 -100 -320 450 -150 blue2
+
+
 # composite
 define shape composite root rbottom bsphere
 # scene xform
@@ -11,11 +29,11 @@ define shape composite root rbottom bsphere
 transform root rotate 45 0 0 1
 transform root translate 0 0 -10
 # lights
-define light sun 500 800 0 1.0 1.0 1.0 10
-define light spot1 -500 800 0 0.8 0.8 0.8 10 
+define light light1 -100 -100 -5 1.0 1.0 1.0 1
+define light light1 100 -100 -5 1.0 1.0 1.0 3
 ambient 0.1 0.1 0.1
 # camera
-define camera eye 60 240 320 10 0 0 -1 0 1 0
+define camera eye 75
 # camera xform
 transform eye rotate -45 0 1 0
 transform eye translate 100 0 100
