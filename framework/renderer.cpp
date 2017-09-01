@@ -71,6 +71,7 @@ Color Renderer::shades(Hit const& hit)
 {
   Color Ia=addambient(hit);
   Color Ids=adddiffusespecular(hit);
+  //Color Id=adddiffuse(hit);
   Color I=Ia+Ids;
   return I;
 
@@ -85,8 +86,31 @@ Color Renderer::addambient(Hit const& hit)
 
 return Ia*ka;
 }
+/*
+Color Renderer::adddiffuse(Hit const& hit)
+{
+Color kd=hit.m_shape_ptr->get_material().m_kd;
+Color Id={0,0,0};
+float anglecosine = 0.0f;
+float dotproduct =0.0f;
+float Ip_RGB=0.0f;
+glm::vec3 internorm =glm::normalize(hit.m_norm); 
+for (int i=0;i<scene_.LightVector.size();i++)
+        {
+          glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
+          dotproduct = glm::dot(internorm,lightnorm); 
+          anglecosine = cos(acos(dotproduct));
+          Ip_RGB=scene_.LightVector[i].m_brightness;
+          Color Ip_mit_cos{Ip_RGB*dotproduct,Ip_RGB*dotproduct,Ip_RGB*dotproduct};
+         Id=Id+kd*Ip_mit_cos;
+       }
+return Id*kd;
+}
+*/
+
 //https://stackoverflow.com/questions/31064234/find-the-angle-between-two-vectors-from-an-arbitrary-origin#31064328
 //Never forget the credit ;)
+
 Color Renderer::adddiffusespecular(Hit const& hit)
 {
 Color kd=hit.m_shape_ptr->get_material().m_kd;
@@ -97,21 +121,24 @@ float Ip_RGB=0.0f;
 Color ks=hit.m_shape_ptr->get_material().m_ks;
 float m=hit.m_shape_ptr->get_material().m_m;
 Color Is={0,0,0};
-glm::vec3 internorm =glm::normalize(hit.m_norm); //N
+glm::vec3 internorm =hit.m_norm; //N
 Color Ids={0,0,0};
 Color UnShadows{1,1,1};
 float ShadowBias = 1.01f;
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
-          
-          Ray shadowray {hit.m_intersect*ShadowBias,scene_.LightVector[i].m_pos};
-          
+
+          //Ray shadowray {lightnorm,hit.m_intersect + lightnorm * 0.001f};
+          //Ray shadowray {hit.m_intersect + lightnorm * 0.001f,lightnorm};
+
+          Ray shadowray {scene_.LightVector[i].m_pos,hit.m_intersect + lightnorm * 0.001f};
+          //Ray shadowray {hit.m_intersect + lightnorm * 0.001f,scene_.LightVector[i].m_pos};
           for (int i=0;i<scene_.ShapeVector.size();i++)
           {   
           Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);
           if (shadowhit.m_hit==true) { 
-              //UnShadows={0,0,0};
+              UnShadows={0,0,0};
               break;
             
            }

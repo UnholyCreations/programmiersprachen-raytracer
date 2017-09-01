@@ -85,7 +85,6 @@ Hit Sphere::intersect(Ray const& ray)
 	if (d>0)
 	{
 		float t1=(-b - sqrt(d))/(2*a);
-		std::cout<<"intersect\n";
 		sphere_hit.m_hit=true;
 		sphere_hit.m_shape_ptr = this;
 		sphere_hit.m_intersect=ray.m_origin+t1*ray.m_direction;

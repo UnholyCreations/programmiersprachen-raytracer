@@ -30,6 +30,7 @@ public:
   Color raytrace(Ray const& ray);  //Prozedural kommt hier
   Color shades(Hit const& hit);
   Color addambient(Hit const& hit);
+   Color adddiffuse(Hit const& hit);
   Color adddiffusespecular(Hit const& hit);
   
   inline std::vector<Color> const& colorbuffer() const
