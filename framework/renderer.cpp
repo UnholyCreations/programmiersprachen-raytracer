@@ -124,20 +124,16 @@ Color Is={0,0,0};
 glm::vec3 internorm =hit.m_norm; //N
 Color Ids={0,0,0};
 Color UnShadows{1,1,1};
-float ShadowBias = 1.01f;
     for (int i=0;i<scene_.LightVector.size();i++)
         {
-          glm::vec3 lightnorm =glm::normalize(hit.m_intersect-scene_.LightVector[i].m_pos);
-
-          //Ray shadowray {lightnorm,hit.m_intersect + lightnorm * 0.001f};
-          //Ray shadowray {hit.m_intersect + lightnorm * 0.001f,lightnorm};
-
-          Ray shadowray {scene_.LightVector[i].m_pos,hit.m_intersect + lightnorm * 0.001f};
-          //Ray shadowray {hit.m_intersect + lightnorm * 0.001f,scene_.LightVector[i].m_pos};
+          glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
+          Ray shadowray {hit.m_intersect + lightnorm * 0.005f,lightnorm};
           for (int i=0;i<scene_.ShapeVector.size();i++)
           {   
           Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);
-          if (shadowhit.m_hit==true) { 
+          float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[i].m_pos);
+          if (shadowhit.m_distance<lightdistance ) { //works
+          //if (shadowhit.m_hit==true ) {
               UnShadows={0,0,0};
               break;
             
@@ -149,7 +145,7 @@ float ShadowBias = 1.01f;
           }
           
           dotproduct = glm::dot(internorm,lightnorm); 
-          anglecosine = cos(acos(dotproduct));
+          anglecosine = cos(acos(-dotproduct));
           Ip_RGB=scene_.LightVector[i].m_brightness;
           Color Ip_mit_cos{Ip_RGB*anglecosine,Ip_RGB*anglecosine,Ip_RGB*anglecosine};
          Id=Id+kd*Ip_mit_cos;
