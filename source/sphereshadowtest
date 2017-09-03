@@ -1,0 +1,27 @@
+define shape sphere sphere1 0 100 -30 25 blue
+define shape sphere sphere1 0 150 -30 25 blue
+
+define shape sphere sphere1 60 100 -30 25 blue
+define shape sphere sphere1 120 100 -30 25 blue
+define shape sphere sphere1 180 100 -30 25 blue
+define shape sphere sphere1 240 100 -30 25 blue
+define shape sphere sphere1 300 100 -30 25 blue
+
+define shape sphere sphere1 60 150 -30 25 blue
+define shape sphere sphere1 120 150 -30 25 blue
+define shape sphere sphere1 180 150 -30 25 blue
+define shape sphere sphere1 240 150 -30 25 blue
+define shape sphere sphere1 300 150 -30 25 blue
+
+define shape sphere sphere1 -60 100 -30 25 blue
+define shape sphere sphere1 -120 100 -30 25 blue
+define shape sphere sphere1 -180 100 -30 25 blue
+define shape sphere sphere1 -240 100 -30 25 blue
+define shape sphere sphere1 -300 100 -30 25 blue
+
+
+define shape sphere sphere1 -60 150 -30 25 blue
+define shape sphere sphere1 -120 150 -30 25 blue
+define shape sphere sphere1 -180 150 -30 25 blue
+define shape sphere sphere1 -240 150 -30 25 blue
+define shape sphere sphere1 -300 150 -30 25 blue

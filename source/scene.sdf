@@ -29,7 +29,6 @@ define shape composite root rbottom bsphere
 transform root rotate 45 0 0 1
 transform root translate 0 0 -10
 # lights
-define light light1 0 0 -100 1.0 1.0 1.0 15
 define light light2 0 100 -100 1.0 1.0 1.0 15
 ambient 0.2 0.2 0.2
 # camera

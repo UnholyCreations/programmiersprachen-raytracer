@@ -145,7 +145,7 @@ Color UnShadows{1,1,1};
           }
           
           dotproduct = glm::dot(internorm,lightnorm); 
-          anglecosine = cos(acos(-dotproduct));
+          anglecosine = cos(acos(dotproduct));
           Ip_RGB=scene_.LightVector[i].m_brightness;
           Color Ip_mit_cos{Ip_RGB*anglecosine,Ip_RGB*anglecosine,Ip_RGB*anglecosine};
          Id=Id+kd*Ip_mit_cos;

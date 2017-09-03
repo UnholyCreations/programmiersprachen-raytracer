@@ -11,6 +11,8 @@
 class Box: public Shape
 {
 private:
+  glm::vec3 m_kord1;
+  glm::vec3 m_kord2;
   glm::vec3 m_min;
   glm::vec3 m_max;
   glm::vec3 seiten=m_max-m_min;

@@ -4,9 +4,14 @@ Box::Box() : Shape{}, m_min{0,0,0},m_max{1,1,1} // default constructor
 {}
 Box::Box(std::string const& name,Material const& material,glm::vec3 const& min,glm::vec3 const& max)://user constructor
 Shape{name,material},
-m_min{min},
-m_max{max}
-{}
+m_kord1{min},
+m_kord2{max}
+{
+if (m_kord1.x>m_kord2.x) {m_max.x=m_kord1.x; m_min.x=m_kord2.x;} else {m_max.x=m_kord2.x; m_min.x=m_kord1.x;};
+if (m_kord1.y>m_kord2.y) {m_max.y=m_kord1.y; m_min.y=m_kord2.y;} else {m_max.y=m_kord2.y; m_min.y=m_kord1.y;};
+if (m_kord1.z>m_kord2.z) {m_max.z=m_kord1.z; m_min.z=m_kord2.z;} else {m_max.z=m_kord2.z; m_min.z=m_kord1.z;};
+
+}
 
 Box::~Box() {}; //desturctor
 
@@ -45,29 +50,59 @@ return os<<"Box: \n"<<"min coordinates:"<<m_min.x<<" "<<m_min.y<<" "<<m_min.z<<"
 Hit Box::intersect(Ray const& ray)
 {
 Hit box_hit;
-float tmin = -INFINITY, tmax = INFINITY;
+//float tmin = -INFINITY, tmax = INFINITY;
 
-//stepX
-float t1=(m_min.x-ray.m_origin.x)*ray.m_inverse.x;
-float t2=(m_max.x-ray.m_origin.x)*ray.m_inverse.x;
-tmin = std::max(tmin, std::min(t1, t2));
-tmax = std::min(tmax, std::max(t1, t2));
-//stepY
-t1=(m_min.y-ray.m_origin.y)*ray.m_inverse.y;
-t2=(m_max.y-ray.m_origin.y)*ray.m_inverse.y;
-tmin = std::max(tmin, std::min(t1, t2));
-tmax = std::min(tmax, std::max(t1, t2));
-//stepZ
-t1=(m_min.z-ray.m_origin.z)*ray.m_inverse.z;
-t2=(m_max.z-ray.m_origin.z)*ray.m_inverse.z;
-tmin = std::max(tmin, std::min(t1, t2));
-tmax = std::min(tmax, std::max(t1, t2));
+float tmin, tmax, tymin, tymax, tzmin, tzmax;
+if (ray.m_direction.x >= 0) {
+    tmin = (m_min.x - ray.m_origin.x) / ray.m_direction.x;
+    tmax = (m_max.x - ray.m_origin.x) / ray.m_direction.x;
+}
+else {
+    tmin = (m_max.x - ray.m_origin.x) / ray.m_direction.x;
+    tmax = (m_min.x - ray.m_origin.x) / ray.m_direction.x;
+}
+if (ray.m_direction.y >= 0) {
+    tymin = (m_min.y - ray.m_origin.y) / ray.m_direction.y;
+    tymax = (m_max.y - ray.m_origin.y) / ray.m_direction.y;
+} else {
+    tymin = (m_max.y - ray.m_origin.y) / ray.m_direction.y;
+    tymax = (m_min.y - ray.m_origin.y) / ray.m_direction.y;
+}
+if ((tmin > tymax) || (tymin > tmax)) {
+  box_hit.m_hit=false;
+    return box_hit;
+}
+if (tymin > tmin) {
+    tmin = tymin;
+}
+if (tymax < tmax) {
+    tmax = tymax;
+}
+if (ray.m_direction.z >= 0) {
+    tzmin = (m_min.z - ray.m_origin.z) / ray.m_direction.z;
+    tzmax = (m_max.z - ray.m_origin.z) / ray.m_direction.z;
+} else {
+    tzmin = (m_max.z - ray.m_origin.z) / ray.m_direction.z;
+    tzmax = (m_min.z - ray.m_origin.z) / ray.m_direction.z;
+}
+if ((tmin > tzmax) || (tzmin > tmax)) {
+  box_hit.m_hit=false;
+    return box_hit;
+}
+if (tzmin > tmin) {
+    tmin = tzmin;
+}
+if (tzmax < tmax) {
+    tmax = tzmax;
+}
+
 if (tmax > std::max(tmin, 0.0f))
 {
   box_hit.m_hit=true;
   box_hit.m_shape_ptr = this;
-  box_hit.m_distance = sqrt((tmin*tmin)*(ray.m_direction.x*ray.m_direction.x+ray.m_direction.y*ray.m_direction.y+ray.m_direction.z*ray.m_direction.z));
-  box_hit.m_intersect=glm::vec3{tmin*ray.m_direction.x, tmin*ray.m_direction.y, tmin*ray.m_direction.z}+ray.m_origin;
+  
+  box_hit.m_intersect=ray.m_origin+glm::normalize(ray.m_direction)*tmin; 
+   box_hit.m_distance=glm::length(ray.m_origin-box_hit.m_intersect);
    if ((box_hit.m_intersect.x)==Approx(m_max.x))
         {
            box_hit.m_norm=glm::vec3(1.0f,0.0f,0.0f);  
