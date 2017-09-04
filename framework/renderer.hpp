@@ -37,6 +37,8 @@ public:
   {
     return colorbuffer_;
   }
+public:
+float m_focal=1000.0f;
 
 private:
   Scene scene_;

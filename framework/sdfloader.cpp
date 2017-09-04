@@ -143,9 +143,34 @@ Scene sdf_loader()
 
 
 
-                                     } }}
+                                     }
+        //sdfloader kills braincells too ;D
+        if(keyword == "transform")
+        {
+            ss>>keyword;
+            
+            if (myscene.SceneCamera.get_name()==keyword)
+            {
+            ss>>keyword;
+            if(keyword == "rotate")
+            {
+            float angle;
+            glm::vec3 axis;
+            ss>>angle;
+            ss>>axis.x;
+            ss>>axis.y;
+            ss>>axis.z;
+            myscene.SceneCamera.CamRotate(angle,axis);
+            }
+            }
+        }
+
+
+
+
+ }}
 //Print Stuff..
-                                    
+                                   
 std::cout<<"\n________________________________________________________________________________________"; 
 std::cout<<"\nPrint Loaded Shapes:\n";  
 std::cout<<"________________________________________________________________________________________\n";                                      
@@ -165,6 +190,7 @@ myscene.Print_Lights();
 std::cout<<"________________________________________________________________________________________\n";  
 std::cout<<"\nPrint Loaded Ambience:\n";  
 std::cout<<"________________________________________________________________________________________\n";  
+
 myscene.Print_Ambience();
 return myscene;
 }

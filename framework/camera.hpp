@@ -22,9 +22,11 @@ public:
 	glm::vec3 const& get_dir() const;
 	glm::vec3 const& get_upvec() const;	
 	Ray castray(int pixel_x, int pixel_y, int x_reso, int y_reso) const;
-	glm::mat4 const CamTrans() const;
 
+	//setter
+	void CamRotate(float angle,glm::vec3 axis);
 
+	//print
 	void print();
 	//DATA
 
@@ -33,6 +35,7 @@ public:
   	glm::vec3 m_pos; 
   	glm::vec3 m_dir; 
   	glm::vec3 m_up; 
+  	glm::mat4 m_worldtrans;
 };
 
 

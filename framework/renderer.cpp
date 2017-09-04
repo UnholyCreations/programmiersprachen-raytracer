@@ -24,7 +24,12 @@ Renderer::Renderer(Scene const& scene):
 
 void Renderer::render()
 {
-
+std::uniform_real_distribution<float> distribution(0.0f,1.0f);
+std::default_random_engine generator;
+glm::vec3 pos=scene_.SceneCamera.m_pos;
+Color dof_final={0,0,0};
+Color dof_color={0,0,0};
+//scene_.SceneCamera.CamRotate(-45.0f,{1,0,0});
   for (int y = 0; y < scene_.y_resolution; ++y)
   { 
     for (int x = 0; x < scene_.x_resolution; ++x)
@@ -32,8 +37,9 @@ void Renderer::render()
     Pixel p(x,y);
       Ray camera_ray = scene_.SceneCamera.castray(x-(scene_.x_resolution/2),y-(scene_.y_resolution/2)
       ,scene_.x_resolution/2, scene_.y_resolution/2);
+      
       Color pixel_color = raytrace(camera_ray);
-      p.color = pixel_color;
+      p.color = pixel_color+dof_final;
       write(p);
     }
   }   
@@ -127,7 +133,7 @@ Color UnShadows{1,1,1};
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
-          Ray shadowray {hit.m_intersect + lightnorm * 0.005f,lightnorm};
+          Ray shadowray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
           for (int i=0;i<scene_.ShapeVector.size();i++)
           {   
           Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);

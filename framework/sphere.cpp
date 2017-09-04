@@ -75,9 +75,9 @@ Hit Sphere::intersect(Ray const& ray)
 	sphere_hit.m_norm=glm::normalize(sphere_hit.m_intersect-m_center);
 		
 	}
-	/*
-
 	
+
+	/*
 	float a=glm::dot(ray.m_direction,ray.m_direction);
 	float b=2.0f*glm::dot(ray.m_direction,ray.m_origin-m_center);
 	float c=glm::dot(ray.m_origin-m_center,ray.m_origin-m_center)-m_radius*m_radius;
@@ -86,14 +86,21 @@ Hit Sphere::intersect(Ray const& ray)
 	
 	if (d>0)
 	{
-		float t1=(-b - sqrt(d))/(2*a);
+		float inverse=1/(2*a);
+		float t1=(-b - sqrt(d))*inverse;
+		float t2=(-b + sqrt(d))*inverse;
+		float tfinal=std::min(t1,t2);
+
+
+
 		sphere_hit.m_hit=true;
 		sphere_hit.m_shape_ptr = this;
-		sphere_hit.m_intersect=ray.m_origin+t1*ray.m_direction;
+		sphere_hit.m_intersect=ray.m_origin+t1*glm::normalize(ray.m_direction);
 		sphere_hit.m_distance = glm::distance(ray.m_origin, sphere_hit.m_intersect);
 		sphere_hit.m_norm=glm::normalize(sphere_hit.m_intersect-m_center);
+
 	}
-	*/
+*/
     return sphere_hit;
     
 }
