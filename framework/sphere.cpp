@@ -7,7 +7,7 @@ Sphere::Sphere() : Shape{},m_center{0,0,0},m_radius{1.0}  // default constructor
 
 
 Sphere::Sphere(std::string const& name, Material const& material,glm::vec3 const& center,double const& radius)://user constructor
-Shape{name,material},
+Shape{name,material,1},
 m_center{center},
 m_radius{radius}
 {//std::cout<< "sphere user constructor\n";

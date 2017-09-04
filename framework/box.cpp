@@ -3,7 +3,7 @@
 Box::Box() : Shape{}, m_min{0,0,0},m_max{1,1,1} // default constructor
 {}
 Box::Box(std::string const& name,Material const& material,glm::vec3 const& min,glm::vec3 const& max)://user constructor
-Shape{name,material},
+Shape{name,material,0},
 m_kord1{min},
 m_kord2{max}
 {

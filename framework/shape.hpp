@@ -16,7 +16,7 @@ class Shape
 public:
 	//Constructors
   Shape();//default
-  Shape(std::string const& name, Material const& material);//User 
+  Shape(std::string const& name, Material const& material,int const& type);//User 
   virtual ~Shape();//Destructor
   //Virtual Methods
   virtual double area() const = 0;
@@ -25,12 +25,13 @@ public:
   virtual Hit intersect(Ray const& ray) = 0;
   //Const Attributes
   std::string get_name() const; 
+  int get_type() const; 
   Material get_material() const;
 
 private:
 std::string m_name;
 Material m_material;
-
+int m_type;
 };
 
 

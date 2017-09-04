@@ -24,12 +24,8 @@ Renderer::Renderer(Scene const& scene):
 
 void Renderer::render()
 {
-std::uniform_real_distribution<float> distribution(0.0f,1.0f);
-std::default_random_engine generator;
 glm::vec3 pos=scene_.SceneCamera.m_pos;
-Color dof_final={0,0,0};
-Color dof_color={0,0,0};
-//scene_.SceneCamera.CamRotate(-45.0f,{1,0,0});
+
   for (int y = 0; y < scene_.y_resolution; ++y)
   { 
     for (int x = 0; x < scene_.x_resolution; ++x)
@@ -39,7 +35,7 @@ Color dof_color={0,0,0};
       ,scene_.x_resolution/2, scene_.y_resolution/2);
       
       Color pixel_color = raytrace(camera_ray);
-      p.color = pixel_color+dof_final;
+      p.color = pixel_color;
       write(p);
     }
   }   
@@ -77,12 +73,28 @@ Color Renderer::shades(Hit const& hit)
 {
   Color Ia=addambient(hit);
   Color Ids=adddiffusespecular(hit);
+  Color Ifog=addfog(hit,2000);
   //Color Id=adddiffuse(hit);
-  Color I=Ia+Ids;
+  Color I=Ia+Ids+Ifog;
   return I;
 
 }
+Color Renderer::addfog(Hit const& hit,float end)
+{
+  float distance;
+  if (hit.m_shape_ptr->get_type()==0)
+  {
+  distance=hit.m_distance;
+  }
+  if (hit.m_shape_ptr->get_type()==1)
+  {
+  distance=hit.m_distance*2.5;
+  }
 
+  float end_inv=1/end;
+  Color Ifog={distance*end_inv,distance*end_inv,distance*end_inv};
+return Ifog;
+}
 
 
 Color Renderer::addambient(Hit const& hit)
