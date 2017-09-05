@@ -25,6 +25,7 @@ Renderer::Renderer(Scene const& scene):
 void Renderer::render()
 {
 glm::vec3 pos=scene_.SceneCamera.m_pos;
+
 Color ninth={0.11f,0.11f,0.11f};
   for (int y = 0; y < scene_.y_resolution; ++y)
   { 
@@ -37,7 +38,9 @@ Color ninth={0.11f,0.11f,0.11f};
       {
       Ray camera_ray = scene_.SceneCamera.castray(float(x)+xa-(scene_.x_resolution/2.0f),float(y)+ya-(scene_.y_resolution/2.0f)
       ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
-      
+      //Ray Plane intersection returns vec3
+      //From pixels around x and y shoot rays through normalized returned vec3 and get intersections with objects
+
       Color pixel_color = raytrace(camera_ray);
       p.color += pixel_color*ninth;
       }}
