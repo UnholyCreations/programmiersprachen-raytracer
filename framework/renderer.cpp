@@ -25,17 +25,22 @@ Renderer::Renderer(Scene const& scene):
 void Renderer::render()
 {
 glm::vec3 pos=scene_.SceneCamera.m_pos;
-
+Color ninth={0.11f,0.11f,0.11f};
   for (int y = 0; y < scene_.y_resolution; ++y)
   { 
     for (int x = 0; x < scene_.x_resolution; ++x)
     {
     Pixel p(x,y);
-      Ray camera_ray = scene_.SceneCamera.castray(x-(scene_.x_resolution/2),y-(scene_.y_resolution/2)
-      ,scene_.x_resolution/2, scene_.y_resolution/2);
+      for (float xa=-0.2f; xa<=0.2f; xa+=0.2f)
+      {
+      for (float ya=-0.2f; ya<=0.2f; ya+=0.2f)
+      {
+      Ray camera_ray = scene_.SceneCamera.castray(float(x)+xa-(scene_.x_resolution/2.0f),float(y)+ya-(scene_.y_resolution/2.0f)
+      ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
       
       Color pixel_color = raytrace(camera_ray);
-      p.color = pixel_color;
+      p.color += pixel_color*ninth;
+      }}
       write(p);
     }
   }   

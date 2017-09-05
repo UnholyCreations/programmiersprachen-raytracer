@@ -21,7 +21,7 @@ public:
 	glm::vec3 const& get_pos() const;
 	glm::vec3 const& get_dir() const;
 	glm::vec3 const& get_upvec() const;	
-	Ray castray(int pixel_x, int pixel_y, int x_reso, int y_reso) const;
+	Ray castray(float pixel_x, float pixel_y, float x_reso, float y_reso) const;
 
 	//setter
 	void CamRotate(float angle,glm::vec3 axis);
