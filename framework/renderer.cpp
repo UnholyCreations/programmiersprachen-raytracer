@@ -21,29 +21,52 @@ Renderer::Renderer(Scene const& scene):
     ppm_(scene.x_resolution, scene.y_resolution, scene.file_name)
     {}
 
-
 void Renderer::render()
 {
 glm::vec3 pos=scene_.SceneCamera.m_pos;
-
+float d;
+float intersectionDistance;
+glm::vec3 new_dir;
 Color ninth={0.11f,0.11f,0.11f};
+Color pixel_color ={0.0f,0.0f,0.0f};
+//Color dof_color ={0.0f,0.0f,0.0f};
   for (int y = 0; y < scene_.y_resolution; ++y)
   { 
     for (int x = 0; x < scene_.x_resolution; ++x)
     {
     Pixel p(x,y);
+      /*
       for (float xa=-0.2f; xa<=0.2f; xa+=0.2f)
       {
       for (float ya=-0.2f; ya<=0.2f; ya+=0.2f)
       {
-      Ray camera_ray = scene_.SceneCamera.castray(float(x)+xa-(scene_.x_resolution/2.0f),float(y)+ya-(scene_.y_resolution/2.0f)
+      */
+      Ray camera_ray = scene_.SceneCamera.castray(float(x)-(scene_.x_resolution/2.0f),float(y)-(scene_.y_resolution/2.0f)
       ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
-      //Ray Plane intersection returns vec3
-      //From pixels around x and y shoot rays through normalized returned vec3 and get intersections with objects
+      //std::cout<<"camera dir"<<camera_ray.m_direction.x<<" "<<camera_ray.m_direction.y<<" "<<camera_ray.m_direction.z<<"\n";
+      d = glm::dot(camera_ray.m_direction, focal_normal);
 
-      Color pixel_color = raytrace(camera_ray);
-      p.color += pixel_color*ninth;
-      }}
+      if(d < FLT_EPSILON)
+      {
+        intersectionDistance = glm::dot(focal_plane - camera_ray.m_origin, focal_normal) / d;
+        new_dir=camera_ray.m_direction*intersectionDistance;
+        //std::cout<<"new dir"<<new_dir.x<<" "<<new_dir.y<<" "<<new_dir.z<<"\n";
+        for (float xd=-2.0f; xd<=2.0f; xd+=2.0f)
+        {
+        for (float yd=-2.0f; yd<=2.0f; yd+=2.0f)
+        {
+        Ray dof_ray{{float(x)+xd-(scene_.x_resolution/2.0f),float(y)+yd-(scene_.y_resolution/2.0f),0},new_dir};
+        dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
+        Color dof_color = raytrace(dof_ray);
+        p.color += dof_color*ninth;
+         }
+       } 
+
+        //std::cout<<"intersection distance"<<intersectionDistance<<"\n";
+      }
+
+
+      //}}
       write(p);
     }
   }   
@@ -81,9 +104,9 @@ Color Renderer::shades(Hit const& hit)
 {
   Color Ia=addambient(hit);
   Color Ids=adddiffusespecular(hit);
-  Color Ifog=addfog(hit,2000);
+  //Color Ifog=addfog(hit,2000);
   //Color Id=adddiffuse(hit);
-  Color I=Ia+Ids+Ifog;
+  Color I=Ia+Ids;
   return I;
 
 }
@@ -160,7 +183,7 @@ Color UnShadows{1,1,1};
           float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[i].m_pos);
           if (shadowhit.m_distance<lightdistance ) { //works
           //if (shadowhit.m_hit==true ) {
-              UnShadows={0,0,0};
+              //UnShadows={0,0,0};
               break;
             
            }
@@ -203,3 +226,32 @@ void Renderer::write(Pixel const& p)
 
   ppm_.write(p);
 }
+/*
+void Renderer::render()
+{
+glm::vec3 pos=scene_.SceneCamera.m_pos;
+
+Color ninth={0.11f,0.11f,0.11f};
+  for (int y = 0; y < scene_.y_resolution; ++y)
+  { 
+    for (int x = 0; x < scene_.x_resolution; ++x)
+    {
+    Pixel p(x,y);
+      for (float xa=-0.2f; xa<=0.2f; xa+=0.2f)
+      {
+      for (float ya=-0.2f; ya<=0.2f; ya+=0.2f)
+      {
+      Ray camera_ray = scene_.SceneCamera.castray(float(x)+xa-(scene_.x_resolution/2.0f),float(y)+ya-(scene_.y_resolution/2.0f)
+      ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
+      //Ray Plane intersection returns vec3
+      //From pixels around x and y shoot rays through normalized returned vec3 and get intersections with objects
+
+      Color pixel_color = raytrace(camera_ray);
+      p.color += pixel_color*ninth;
+      }}
+      write(p);
+    }
+  }   
+    ppm_.save(scene_.file_name);
+}
+*/
