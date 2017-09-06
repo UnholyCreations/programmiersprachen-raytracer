@@ -35,18 +35,17 @@ Color pixel_color ={0.0f,0.0f,0.0f};
     for (int x = 0; x < scene_.x_resolution; ++x)
     {
     Pixel p(x,y);
-      /*
-      for (float xa=-0.2f; xa<=0.2f; xa+=0.2f)
-      {
-      for (float ya=-0.2f; ya<=0.2f; ya+=0.2f)
-      {
-      */
       Ray camera_ray = scene_.SceneCamera.castray(float(x)-(scene_.x_resolution/2.0f),float(y)-(scene_.y_resolution/2.0f)
       ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
       //std::cout<<"camera dir"<<camera_ray.m_direction.x<<" "<<camera_ray.m_direction.y<<" "<<camera_ray.m_direction.z<<"\n";
       d = glm::dot(camera_ray.m_direction, focal_normal);
-
-      if(d < FLT_EPSILON)
+      if (d> FLT_EPSILON)
+      {
+      std::cout<<"d>FLT_EPSILON";
+      Color pixel_color = raytrace(camera_ray);
+      p.color = pixel_color;
+      }
+      else if(d < FLT_EPSILON)
       {
         intersectionDistance = glm::dot(focal_plane - camera_ray.m_origin, focal_normal) / d;
         new_dir=camera_ray.m_direction*intersectionDistance;
@@ -55,7 +54,9 @@ Color pixel_color ={0.0f,0.0f,0.0f};
         {
         for (float yd=-2.0f; yd<=2.0f; yd+=2.0f)
         {
-        Ray dof_ray{{float(x)+xd-(scene_.x_resolution/2.0f),float(y)+yd-(scene_.y_resolution/2.0f),0},new_dir};
+        //Ray dof_ray = scene_.SceneCamera.castray(float(x)+xd-(scene_.x_resolution/2.0f),float(y)+yd-(scene_.y_resolution/2.0f)
+        // ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);  
+        Ray dof_ray{{scene_.SceneCamera.m_pos.x+xd,scene_.SceneCamera.m_pos.y+xd,scene_.SceneCamera.m_pos.z},new_dir};
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
         Color dof_color = raytrace(dof_ray);
         p.color += dof_color*ninth;
@@ -183,7 +184,7 @@ Color UnShadows{1,1,1};
           float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[i].m_pos);
           if (shadowhit.m_distance<lightdistance ) { //works
           //if (shadowhit.m_hit==true ) {
-              //UnShadows={0,0,0};
+              UnShadows={0,0,0};
               break;
             
            }

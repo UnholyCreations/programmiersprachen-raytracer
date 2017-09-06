@@ -39,7 +39,7 @@ public:
     return colorbuffer_;
   }
 public:
-float m_focal=-10050.0f;
+float m_focal=-50.0f;
 glm::vec3 focal_plane={0,0,m_focal};
 glm::vec3 focal_normal={0,0,1};
 private:
