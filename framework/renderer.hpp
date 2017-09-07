@@ -34,14 +34,13 @@ public:
    Color adddiffuse(Hit const& hit);
    Color addfog(Hit const& hit,float end);
   Color adddiffusespecular(Hit const& hit);
-  
   inline std::vector<Color> const& colorbuffer() const
   {
     return colorbuffer_;
   }
 public:
-float m_focal=50.0f;
-glm::vec3 focal_plane={0,0,m_focal};
+float m_focal=0.0f;
+glm::vec3 focal_plane;
 glm::vec3 focal_normal={0,0,1};
 private:
   Scene scene_;

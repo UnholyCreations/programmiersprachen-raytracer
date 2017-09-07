@@ -74,7 +74,7 @@ Ray Camera::castray(float pixel_x, float pixel_y, float x_reso, float y_reso) co
 
 void Camera::CamRotate(float angle,glm::vec3 axis)
 {
-  angle=angle*M_PI/180;
+  angle=angle*M_PI/360;
   //https://math.stackexchange.com/questions/134741/a-4x4-homogeneous-matrix-for-a-90-degree-rotation-about-y-axis
   glm::mat4 CamRotate;
   if (axis.x!=0)

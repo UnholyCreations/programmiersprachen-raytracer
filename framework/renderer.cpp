@@ -13,16 +13,26 @@ Renderer::Renderer():
     scene_(),
     colorbuffer_(scene_.x_resolution*scene_.y_resolution, Color{0,0,0}),
     ppm_(scene_.x_resolution, scene_.y_resolution, "default_constrtor_img.ppm")
-    {}
+    {
+    //focal_plane=scene_.SceneCamera.m_dir*m_focal;
+    }
 
 Renderer::Renderer(Scene const& scene):
     scene_(scene),
     colorbuffer_(scene.x_resolution*scene.y_resolution, Color{0,0,0}),
     ppm_(scene.x_resolution, scene.y_resolution, scene.file_name)
-    {}
+    {
+    //focal_plane=scene_.SceneCamera.m_dir*m_focal;
+    }
+
+
 
 void Renderer::render()
 {
+//focal_plane=scene_.SceneCamera.m_dir*m_focal;
+//focal_normal=-1.0f*glm::normalize(scene_.SceneCamera.m_dir*m_focal);
+//std::cout<<"focal_plane "<<focal_plane.x<<" "<<focal_plane.y<<" "<< focal_plane.z<<"\n";
+//std::cout<<"focal_normal "<<focal_normal.x<<" "<<focal_normal.y<<" "<< focal_normal.z<<"\n";
 glm::vec3 pos=scene_.SceneCamera.m_pos;
 float d;
 float intersectionDistance;
@@ -32,7 +42,15 @@ bool intersect;
 Color ninth={0.11f,0.11f,0.11f};
 Color pixel_color ={0.0f,0.0f,0.0f};
 //Color dof_color ={0.0f,0.0f,0.0f};
-  for (int y = 0; y < scene_.y_resolution; ++y)
+
+
+Ray plane_ray = scene_.SceneCamera.castray(0.0f,0.0f
+      ,scene_.x_resolution, scene_.y_resolution);
+focal_plane=m_focal*plane_ray.m_direction;
+focal_normal=glm::normalize(-plane_ray.m_direction);
+//std::cout<<"focal_plane:"<<focal_plane.x<<" "<<focal_plane.y<<" "<<focal_plane.z<<"\n";
+//std::cout<<"focal_normal:"<<focal_normal.x<<" "<<focal_normal.y<<" "<<focal_normal.z<<"\n";
+for (int y = 0; y < scene_.y_resolution; ++y)
   { 
     for (int x = 0; x < scene_.x_resolution; ++x)
     {
@@ -40,6 +58,8 @@ Color pixel_color ={0.0f,0.0f,0.0f};
       Ray camera_ray = scene_.SceneCamera.castray(float(x)-(scene_.x_resolution/2.0f),float(y)-(scene_.y_resolution/2.0f)
       ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
       intersect=glm::intersectRayPlane(camera_ray.m_origin,camera_ray.m_direction,focal_plane,focal_normal,intersectionDistance);
+      if (intersect==0) {std::cout<<"miss\n";} 
+      //if (intersect==1) {p.color =test;} 
         //std::cout<<"old dir: "<<camera_ray.m_direction.x<<" "<<camera_ray.m_direction.y<<" "<<camera_ray.m_direction.z<<"\n";
         //std::cout<<"new dir: "<<new_dir.x<<" "<<new_dir.y<<" "<<new_dir.z<<"\n";
         for (float xd=-2.0f; xd<=2.0f; xd+=2.0f)
@@ -101,7 +121,7 @@ Color Renderer::shades(Hit const& hit)
 {
   Color Ia=addambient(hit);
   Color Ids=adddiffusespecular(hit);
-  //Color Ifog=addfog(hit,2000);
+  Color Ifog=addfog(hit,1000);
   //Color Id=adddiffuse(hit);
   Color I=Ia+Ids;
   return I;
