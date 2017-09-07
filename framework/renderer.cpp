@@ -27,6 +27,8 @@ glm::vec3 pos=scene_.SceneCamera.m_pos;
 float d;
 float intersectionDistance;
 glm::vec3 new_dir;
+glm::vec3 new_pos;
+bool intersect;
 Color ninth={0.11f,0.11f,0.11f};
 Color pixel_color ={0.0f,0.0f,0.0f};
 //Color dof_color ={0.0f,0.0f,0.0f};
@@ -37,26 +39,20 @@ Color pixel_color ={0.0f,0.0f,0.0f};
     Pixel p(x,y);
       Ray camera_ray = scene_.SceneCamera.castray(float(x)-(scene_.x_resolution/2.0f),float(y)-(scene_.y_resolution/2.0f)
       ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
-      //std::cout<<"camera dir"<<camera_ray.m_direction.x<<" "<<camera_ray.m_direction.y<<" "<<camera_ray.m_direction.z<<"\n";
-      d = glm::dot(camera_ray.m_direction, focal_normal);
-      if (d> FLT_EPSILON)
-      {
-      std::cout<<"d>FLT_EPSILON";
-      Color pixel_color = raytrace(camera_ray);
-      p.color = pixel_color;
-      }
-      else if(d < FLT_EPSILON)
-      {
-        intersectionDistance = glm::dot(focal_plane - camera_ray.m_origin, focal_normal) / d;
-        new_dir=camera_ray.m_direction*intersectionDistance;
-        //std::cout<<"new dir"<<new_dir.x<<" "<<new_dir.y<<" "<<new_dir.z<<"\n";
+      intersect=glm::intersectRayPlane(camera_ray.m_origin,camera_ray.m_direction,focal_plane,focal_normal,intersectionDistance);
+        //std::cout<<"old dir: "<<camera_ray.m_direction.x<<" "<<camera_ray.m_direction.y<<" "<<camera_ray.m_direction.z<<"\n";
+        //std::cout<<"new dir: "<<new_dir.x<<" "<<new_dir.y<<" "<<new_dir.z<<"\n";
         for (float xd=-2.0f; xd<=2.0f; xd+=2.0f)
         {
         for (float yd=-2.0f; yd<=2.0f; yd+=2.0f)
         {
         //Ray dof_ray = scene_.SceneCamera.castray(float(x)+xd-(scene_.x_resolution/2.0f),float(y)+yd-(scene_.y_resolution/2.0f)
         // ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);  
-        Ray dof_ray{{scene_.SceneCamera.m_pos.x+xd,scene_.SceneCamera.m_pos.y+xd,scene_.SceneCamera.m_pos.z},new_dir};
+        new_pos={scene_.SceneCamera.m_pos.x+xd,scene_.SceneCamera.m_pos.y+yd,scene_.SceneCamera.m_pos.z};
+        new_dir=camera_ray.m_direction*intersectionDistance;
+        new_dir={new_dir.x-xd,new_dir.y-yd,new_dir.z};
+        new_dir=glm::normalize(new_dir);
+        Ray dof_ray{new_pos,new_dir};
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
         Color dof_color = raytrace(dof_ray);
         p.color += dof_color*ninth;
@@ -64,7 +60,7 @@ Color pixel_color ={0.0f,0.0f,0.0f};
        } 
 
         //std::cout<<"intersection distance"<<intersectionDistance<<"\n";
-      }
+      
 
 
       //}}
