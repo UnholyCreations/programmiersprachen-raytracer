@@ -206,7 +206,7 @@ Color UnShadows{1,1,1};
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
-          Ray shadowray {hit.m_intersect + lightnorm * 0.04f,lightnorm};
+          Ray shadowray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
           shadowray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
           for (int i=0;i<scene_.ShapeVector.size();i++)
           {   

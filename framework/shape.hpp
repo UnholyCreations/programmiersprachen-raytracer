@@ -31,6 +31,8 @@ public:
 
   Ray transformRay(glm::mat4 const& mat,Ray const &ray);
   void ShapeScale(glm::vec3 value);
+  void ShapeTranslate(glm::vec3 offset);
+  void ShapeRotate(float angle,glm::vec3 axis);
 protected:
 glm::mat4 m_worldtrans;
 glm::mat4 m_worldtrans_inv;

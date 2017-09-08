@@ -193,14 +193,32 @@ Scene sdf_loader()
                 if (myscene.ShapeVector[i]->get_name()==keyword)
                     {
                     ss>>keyword;
+                    if(keyword == "rotate")
+                    {
+                    float angle;
+                    glm::vec3 axis;
+                    ss>>angle;
+                    ss>>axis.x;
+                    ss>>axis.y;
+                    ss>>axis.z;
+                    myscene.ShapeVector[i]->ShapeRotate(angle,axis);
+                    }
+                    if(keyword == "translate")
+                    {
+                    glm::vec3 offset;
+                    ss>>offset.x;
+                    ss>>offset.y;
+                    ss>>offset.z;
+                    myscene.ShapeVector[i]->ShapeTranslate(offset);
+                    }
                     if(keyword == "scale")
-                        {
-                        glm::vec3 value;
-                        ss>>value.x;
-                        ss>>value.y;
-                        ss>>value.z;
-                        myscene.ShapeVector[i]->ShapeScale(value);
-                        }
+                    {
+                    glm::vec3 value;
+                    ss>>value.x;
+                    ss>>value.y;
+                    ss>>value.z;
+                    myscene.ShapeVector[i]->ShapeScale(value);
+                    }
 
                     }
                 }
