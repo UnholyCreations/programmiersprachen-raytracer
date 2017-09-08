@@ -50,23 +50,22 @@ return os<<"Box: \n"<<"min coordinates:"<<m_min.x<<" "<<m_min.y<<" "<<m_min.z<<"
 Hit Box::intersect(Ray const& ray)
 {
 Hit box_hit;
-//float tmin = -INFINITY, tmax = INFINITY;
-
+Ray trans_ray=transformRay(m_worldtrans_inv,ray);
 float tmin, tmax, tymin, tymax, tzmin, tzmax;
-if (ray.m_direction.x >= 0) {
-    tmin = (m_min.x - ray.m_origin.x) / ray.m_direction.x;
-    tmax = (m_max.x - ray.m_origin.x) / ray.m_direction.x;
+if (trans_ray.m_direction.x >= 0) {
+    tmin = (m_min.x - trans_ray.m_origin.x) / trans_ray.m_direction.x;
+    tmax = (m_max.x - trans_ray.m_origin.x) / trans_ray.m_direction.x;
 }
 else {
-    tmin = (m_max.x - ray.m_origin.x) / ray.m_direction.x;
-    tmax = (m_min.x - ray.m_origin.x) / ray.m_direction.x;
+    tmin = (m_max.x - trans_ray.m_origin.x) / trans_ray.m_direction.x;
+    tmax = (m_min.x - trans_ray.m_origin.x) / trans_ray.m_direction.x;
 }
-if (ray.m_direction.y >= 0) {
-    tymin = (m_min.y - ray.m_origin.y) / ray.m_direction.y;
-    tymax = (m_max.y - ray.m_origin.y) / ray.m_direction.y;
+if (trans_ray.m_direction.y >= 0) {
+    tymin = (m_min.y - trans_ray.m_origin.y) / trans_ray.m_direction.y;
+    tymax = (m_max.y - trans_ray.m_origin.y) / trans_ray.m_direction.y;
 } else {
-    tymin = (m_max.y - ray.m_origin.y) / ray.m_direction.y;
-    tymax = (m_min.y - ray.m_origin.y) / ray.m_direction.y;
+    tymin = (m_max.y - trans_ray.m_origin.y) / trans_ray.m_direction.y;
+    tymax = (m_min.y - trans_ray.m_origin.y) / trans_ray.m_direction.y;
 }
 if ((tmin > tymax) || (tymin > tmax)) {
   box_hit.m_hit=false;
@@ -78,12 +77,12 @@ if (tymin > tmin) {
 if (tymax < tmax) {
     tmax = tymax;
 }
-if (ray.m_direction.z >= 0) {
-    tzmin = (m_min.z - ray.m_origin.z) / ray.m_direction.z;
-    tzmax = (m_max.z - ray.m_origin.z) / ray.m_direction.z;
+if (trans_ray.m_direction.z >= 0) {
+    tzmin = (m_min.z - trans_ray.m_origin.z) / trans_ray.m_direction.z;
+    tzmax = (m_max.z - trans_ray.m_origin.z) / trans_ray.m_direction.z;
 } else {
-    tzmin = (m_max.z - ray.m_origin.z) / ray.m_direction.z;
-    tzmax = (m_min.z - ray.m_origin.z) / ray.m_direction.z;
+    tzmin = (m_max.z - trans_ray.m_origin.z) / trans_ray.m_direction.z;
+    tzmax = (m_min.z - trans_ray.m_origin.z) / trans_ray.m_direction.z;
 }
 if ((tmin > tzmax) || (tzmin > tmax)) {
   box_hit.m_hit=false;
@@ -101,8 +100,8 @@ if (tmax > std::max(tmin, 0.0f))
   box_hit.m_hit=true;
   box_hit.m_shape_ptr = this;
   
-  box_hit.m_intersect=ray.m_origin+glm::normalize(ray.m_direction)*tmin; 
-   box_hit.m_distance=glm::length(ray.m_origin-box_hit.m_intersect);
+  box_hit.m_intersect=trans_ray.m_origin+glm::normalize(trans_ray.m_direction)*tmin; 
+   box_hit.m_distance=glm::length(trans_ray.m_origin-box_hit.m_intersect);
    if ((box_hit.m_intersect.x)==Approx(m_max.x))
         {
            box_hit.m_norm=glm::vec3(1.0f,0.0f,0.0f);  

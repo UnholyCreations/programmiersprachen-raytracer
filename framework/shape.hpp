@@ -28,7 +28,11 @@ public:
   int get_type() const; 
   Material get_material() const;
 
-private:
+  Ray transformRay(glm::mat4 const& mat,Ray const &ray);
+  void ShapeScale(float value);
+protected:
+glm::mat4 m_worldtrans;
+glm::mat4 m_worldtrans_inv;
 std::string m_name;
 Material m_material;
 int m_type;

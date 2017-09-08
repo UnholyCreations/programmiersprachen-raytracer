@@ -152,37 +152,57 @@ Scene sdf_loader()
         if(keyword == "transform")
         {
             ss>>keyword;
-            
+            //////////////////////////
+            //CAMERA
+            /////////////////////////
             if (myscene.SceneCamera.get_name()==keyword)
             {
-            ss>>keyword;
-            if(keyword == "rotate")
-            {
-            float angle;
-            glm::vec3 axis;
-            ss>>angle;
-            ss>>axis.x;
-            ss>>axis.y;
-            ss>>axis.z;
-            myscene.SceneCamera.CamRotate(angle,axis);
+                ss>>keyword;
+                if(keyword == "rotate")
+                {
+                float angle;
+                glm::vec3 axis;
+                ss>>angle;
+                ss>>axis.x;
+                ss>>axis.y;
+                ss>>axis.z;
+                myscene.SceneCamera.CamRotate(angle,axis);
+                }
+                if(keyword == "translate")
+                {
+                glm::vec3 offset;
+                ss>>offset.x;
+                ss>>offset.y;
+                ss>>offset.z;
+                myscene.SceneCamera.CamTranslate(offset);
+                }
+                if(keyword == "scale")
+                {
+                float value;
+                ss>>value;
+                myscene.SceneCamera.CamScale(value);
+                }
             }
-            if(keyword == "translate")
-            {
-            glm::vec3 offset;
-            ss>>offset.x;
-            ss>>offset.y;
-            ss>>offset.z;
-            myscene.SceneCamera.CamTranslate(offset);
-            }
-            if(keyword == "scale")
-            {
-            float value;
-            ss>>value;
-            myscene.SceneCamera.CamScale(value);
-            }
+            else
+            //////////////////////////
+            //CAMERA
+            /////////////////////////
+            for (int i=0;i<myscene.ShapeVector.size();i++)
+                {   
+                //std::cout<<"name "<<myscene.ShapeVector[i]->get_name()<<"\n";
+                if (myscene.ShapeVector[i]->get_name()==keyword)
+                    {
+                    ss>>keyword;
+                    if(keyword == "scale")
+                        {
+                        float value;
+                        ss>>value;
+                        myscene.ShapeVector[i]->ShapeScale(value);
+                        }
 
+                    }
+                }
 
-            }
         }
 
 
@@ -190,7 +210,7 @@ Scene sdf_loader()
 
  }}
 //Print Stuff..
-                                   
+/*                                
 std::cout<<"\n________________________________________________________________________________________"; 
 std::cout<<"\nPrint Loaded Shapes:\n";  
 std::cout<<"________________________________________________________________________________________\n";                                      
@@ -215,7 +235,7 @@ std::cout<<"____________________________________________________________________
 std::cout<<"\nPrint Loaded Focal:\n";  
 std::cout<<"________________________________________________________________________________________\n";  
 myscene.Print_Focal();
-
+*/
 
 return myscene;
 }

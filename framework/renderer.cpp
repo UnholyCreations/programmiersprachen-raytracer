@@ -72,10 +72,11 @@ for (int y = 0; y < scene_.y_resolution; ++y)
         new_dir=camera_ray.m_direction*intersectionDistance;
         new_dir={new_dir.x-xd,new_dir.y-yd,new_dir.z};
         new_dir=glm::normalize(new_dir);
-        //Ray dof_ray{new_pos,new_dir};
-        //dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
-        //Color dof_color = raytrace(dof_ray);
-        //p.color += dof_color*0.11f;
+        Ray dof_ray{new_pos,new_dir};
+        dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
+        Color dof_color = raytrace(dof_ray);
+        p.color += dof_color*0.11f;
+        /*
         for (float xa=-0.2f; xa<=0.2f; xa+=0.2f)
         {
         for (float ya=-0.2f; ya<=0.2f; ya+=0.2f)
@@ -84,7 +85,9 @@ for (int y = 0; y < scene_.y_resolution; ++y)
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
         Color dof_color = raytrace(dof_ray);
         p.color += dof_color*0.012345679f;
+        
       }}
+      */
          }
        } 
 
