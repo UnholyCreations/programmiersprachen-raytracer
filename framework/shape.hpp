@@ -8,7 +8,6 @@
 #include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
-
 struct Hit;
 class Shape
 {
@@ -24,12 +23,14 @@ public:
   virtual std::ostream & print (std::ostream & os) const=0;
   virtual Hit intersect(Ray const& ray) = 0;
   //Const Attributes
-  std::string get_name() const; 
+  std::string get_name() const;
+  glm::mat4 get_worldtrans() const;
+  glm::mat4 get_worldtrans_inv() const; 
   int get_type() const; 
   Material get_material() const;
 
   Ray transformRay(glm::mat4 const& mat,Ray const &ray);
-  void ShapeScale(float value);
+  void ShapeScale(glm::vec3 value);
 protected:
 glm::mat4 m_worldtrans;
 glm::mat4 m_worldtrans_inv;

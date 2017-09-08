@@ -8,13 +8,9 @@ Shape::Shape(std::string const&  name, Material const& material,int const& type)
 m_material{material},
 m_type{type},
   m_worldtrans{
-  1.0f,0.0f,0.0f,0.0f,
-  0.0f,1.0f,0.0f,0.0f,
-  0.0f,0.0f,1.0f,0.0f,
-  0.0f,0.0f,0.0f,1.0f},
+  1.0f},
   m_worldtrans_inv{glm::inverse(m_worldtrans)}
- {//std::cout<< "shape user constructor\n";
-}
+ {}
 Shape::~Shape() {//std::cout<< "shape destructor\n";
 } //destuctor
 
@@ -42,21 +38,42 @@ int Shape::get_type() const
 {
 	return m_type;
 }
+
+glm::mat4 Shape::get_worldtrans() const
+{
+	return m_worldtrans;
+}
+
+glm::mat4 Shape::get_worldtrans_inv() const
+{
+	return m_worldtrans_inv;
+}
+
+
+
+
+
+
+
+
+
+
 Ray Shape::transformRay(glm::mat4 const& mat,Ray const &ray )
 	{
 	  glm::vec4 temp_org {ray.m_origin, 1.0f};
 	  glm::vec4 temp_dir {ray.m_direction, 0.0f};
 	  glm::vec3 new_org {mat * temp_org };
 	  glm::vec3 new_dir {mat * temp_dir};
-	  Ray NewRay{new_org, new_dir};
+	  Ray NewRay{new_org, glm::normalize(new_dir)};
 	  return NewRay;	
 	}
-void Shape::ShapeScale(float value)
+void Shape::ShapeScale(glm::vec3 value)
 {
-glm::mat4 ShapeScale;  
-ShapeScale[0] = glm::vec4 {value,0.0f,0.0f,0.0f};
-ShapeScale[1] = glm::vec4 {0.0f,value,0.0f,0.0f};
-ShapeScale[2] = glm::vec4 {0.0f,0.0f,value,0.0f};
+glm::mat4 ShapeScale;
+if (value.z==1) {value.z=-1.0f;}  
+ShapeScale[0] = glm::vec4 {value.x,0.0f,0.0f,0.0f};
+ShapeScale[1] = glm::vec4 {0.0f,value.y,0.0f,0.0f};
+ShapeScale[2] = glm::vec4 {0.0f,0.0f,value.z,0.0f};
 ShapeScale[3] = glm::vec4 {0.0f,0.0f,0.0f,1.0f};
 m_worldtrans=m_worldtrans*ShapeScale;
 m_worldtrans_inv=glm::inverse(m_worldtrans);

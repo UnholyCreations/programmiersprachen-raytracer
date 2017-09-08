@@ -195,8 +195,10 @@ Scene sdf_loader()
                     ss>>keyword;
                     if(keyword == "scale")
                         {
-                        float value;
-                        ss>>value;
+                        glm::vec3 value;
+                        ss>>value.x;
+                        ss>>value.y;
+                        ss>>value.z;
                         myscene.ShapeVector[i]->ShapeScale(value);
                         }
 

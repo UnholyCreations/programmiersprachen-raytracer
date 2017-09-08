@@ -107,6 +107,7 @@ Color Renderer::raytrace(Ray const& ray)
   Hit first_hit;
   Color pixel_color=Color{0,0,0};
   double shortest = INFINITY; 
+  int shortest_obj_index;
   for (int i=0;i<scene_.ShapeVector.size();i++)
         {   
         Hit hit=scene_.ShapeVector[i]->intersect(ray);
@@ -116,6 +117,7 @@ Color Renderer::raytrace(Ray const& ray)
           {
           shortest = hit.m_distance;
           first_hit = hit;
+          shortest_obj_index=i;
           }
         }
         };
@@ -125,17 +127,17 @@ Color Renderer::raytrace(Ray const& ray)
   }
   else
   {
-  pixel_color=shades(first_hit);
+  pixel_color=shades(first_hit,shortest_obj_index);
   }
   return pixel_color;
 }
-Color Renderer::shades(Hit const& hit)
+Color Renderer::shades(Hit const& hit,const int index)
 {
   Color Ia=addambient(hit);
-  Color Ids=adddiffusespecular(hit);
+  Color Ids=adddiffusespecular(hit,index);
   Color Ifog=addfog(hit,1000);
   //Color Id=adddiffuse(hit);
-  Color I=Ia+Ids+Ifog;
+  Color I=Ia+Ids;
   return I;
 
 }
@@ -189,11 +191,10 @@ return Id*kd;
 //https://stackoverflow.com/questions/31064234/find-the-angle-between-two-vectors-from-an-arbitrary-origin#31064328
 //Never forget the credit ;)
 
-Color Renderer::adddiffusespecular(Hit const& hit)
+Color Renderer::adddiffusespecular(Hit const& hit,const int index)
 {
 Color kd=hit.m_shape_ptr->get_material().m_kd;
 Color Id={0,0,0};
-float anglecosine = 0.0f;
 float dotproduct =0.0f;
 float Ip_RGB=0.0f;
 Color ks=hit.m_shape_ptr->get_material().m_ks;
@@ -205,16 +206,18 @@ Color UnShadows{1,1,1};
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
-          Ray shadowray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
+          Ray shadowray {hit.m_intersect + lightnorm * 0.04f,lightnorm};
+          shadowray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
           for (int i=0;i<scene_.ShapeVector.size();i++)
           {   
           Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);
           float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[i].m_pos);
           if (shadowhit.m_distance<lightdistance ) { //works
-          //if (shadowhit.m_hit==true ) {
+              if (i!=index)
+              {
               UnShadows={0,0,0};
               break;
-            
+              }
            }
            else
            {
@@ -223,10 +226,9 @@ Color UnShadows{1,1,1};
           }
           
           dotproduct = glm::dot(internorm,lightnorm); 
-          anglecosine = cos(acos(dotproduct));
           Ip_RGB=scene_.LightVector[i].m_brightness;
-          Color Ip_mit_cos{Ip_RGB*anglecosine,Ip_RGB*anglecosine,Ip_RGB*anglecosine};
-         Id=Id+kd*Ip_mit_cos;
+          Ip_RGB*=dotproduct;
+          Id=Id+kd*Ip_RGB;
           glm::vec3 cameranorm =glm::normalize(hit.m_intersect-scene_.SceneCamera.m_pos); //V
           glm::vec3 reflect=2*glm::dot(internorm,lightnorm)*internorm-lightnorm; //R
           float RdotVpowM=pow(glm::dot(reflect,lightnorm),m);

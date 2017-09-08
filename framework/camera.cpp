@@ -95,8 +95,8 @@ void Camera::CamRotate(float angle,glm::vec3 axis)
   }
   if (axis.z!=0)
   {
-  CamRotate[0] = glm::vec4 {cos(angle), sin(angle), 0.0, 0.0};
-  CamRotate[1] = glm::vec4 {-sin(angle), cos(angle), 0.0, 0.0};
+  CamRotate[0] = glm::vec4 {cos(angle), -sin(angle), 0.0, 0.0};
+  CamRotate[1] = glm::vec4 {sin(angle), cos(angle), 0.0, 0.0};
   CamRotate[2] = glm::vec4 {0.0, 0.0, 1.0, 0.0};
   CamRotate[3] = glm::vec4 {0.0, 0.0, 0.0, 1.0};  
   m_worldtrans=m_worldtrans*CamRotate;
@@ -116,6 +116,7 @@ m_worldtrans=m_worldtrans*CamTranslate;
 
 void Camera::CamScale(float value)
 {
+
 glm::mat4 CamScale;  
 CamScale[0] = glm::vec4 {value,0.0f,0.0f,0.0f};
 CamScale[1] = glm::vec4 {0.0f,value,0.0f,0.0f};
