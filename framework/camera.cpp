@@ -113,3 +113,13 @@ CamTranslate[2] = glm::vec4 {0.0f,0.0f,1.0f,0.0f};
 CamTranslate[3] = glm::vec4 {offset.x,offset.y,offset.z,1.0f};
 m_worldtrans=m_worldtrans*CamTranslate;
 }
+
+void Camera::CamScale(float value)
+{
+glm::mat4 CamScale;  
+CamScale[0] = glm::vec4 {value,0.0f,0.0f,0.0f};
+CamScale[1] = glm::vec4 {0.0f,value,0.0f,0.0f};
+CamScale[2] = glm::vec4 {0.0f,0.0f,value,0.0f};
+CamScale[3] = glm::vec4 {0.0f,0.0f,0.0f,1.0f};
+m_worldtrans=m_worldtrans*CamScale;
+}

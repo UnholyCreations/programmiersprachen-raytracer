@@ -33,6 +33,7 @@ void Renderer::render()
 //focal_normal=-1.0f*glm::normalize(scene_.SceneCamera.m_dir*m_focal);
 //std::cout<<"focal_plane "<<focal_plane.x<<" "<<focal_plane.y<<" "<< focal_plane.z<<"\n";
 //std::cout<<"focal_normal "<<focal_normal.x<<" "<<focal_normal.y<<" "<< focal_normal.z<<"\n";
+m_focal=scene_.dof_focal;
 glm::vec3 pos=scene_.SceneCamera.m_pos;
 float d;
 float intersectionDistance;

@@ -39,9 +39,9 @@ public:
     return colorbuffer_;
   }
 public:
-float m_focal=0.0f;
+float m_focal;
 glm::vec3 focal_plane;
-glm::vec3 focal_normal={0,0,1};
+glm::vec3 focal_normal;
 private:
   Scene scene_;
   std::vector<Color> colorbuffer_;

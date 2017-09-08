@@ -40,6 +40,10 @@ Scene sdf_loader()
                 ss>>scene_ambience.b;
                 myscene.SceneAmbience=scene_ambience;
                 }  
+                if (keyword=="focal")
+                {  
+                ss>>myscene.dof_focal;
+                }  
 
         if(keyword == "define"){
           ss>>keyword;
@@ -170,6 +174,14 @@ Scene sdf_loader()
             ss>>offset.z;
             myscene.SceneCamera.CamTranslate(offset);
             }
+            if(keyword == "scale")
+            {
+            float value;
+            ss>>value;
+            myscene.SceneCamera.CamScale(value);
+            }
+
+
             }
         }
 
@@ -198,7 +210,12 @@ myscene.Print_Lights();
 std::cout<<"________________________________________________________________________________________\n";  
 std::cout<<"\nPrint Loaded Ambience:\n";  
 std::cout<<"________________________________________________________________________________________\n";  
-
 myscene.Print_Ambience();
+std::cout<<"________________________________________________________________________________________\n";  
+std::cout<<"\nPrint Loaded Focal:\n";  
+std::cout<<"________________________________________________________________________________________\n";  
+myscene.Print_Focal();
+
+
 return myscene;
 }

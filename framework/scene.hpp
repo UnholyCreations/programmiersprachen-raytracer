@@ -17,6 +17,7 @@ struct Scene
     std::string file_name;
     unsigned int x_resolution;
     unsigned int y_resolution;
+    float dof_focal=0.0f;
     Camera SceneCamera;
 	std::map<std::string,Material> MaterialMap;
 	std::vector<std::shared_ptr<Shape>> ShapeVector;
@@ -42,6 +43,10 @@ struct Scene
     void Print_Camera()
     {
         SceneCamera.print();
+    }
+    void Print_Focal()
+    {
+        std::cout<<"DOF focal:"<<dof_focal<<"\n";
     }
     void Print_Lights()
     {
