@@ -80,26 +80,36 @@ void Camera::CamRotate(float angle,glm::vec3 axis)
   if (axis.x!=0)
   {
   CamRotate[0] = glm::vec4 {1.0, 0.0,0.0,0.0};
-  CamRotate[1] = glm::vec4 {0, cos(angle),-sin(angle),0.0};
-  CamRotate[2] = glm::vec4 {0, sin(angle),cos(angle),0.0};
+  CamRotate[1] = glm::vec4 {0, cos(angle),sin(angle),0.0};
+  CamRotate[2] = glm::vec4 {0, -sin(angle),cos(angle),0.0};
   CamRotate[3] = glm::vec4 {0.0, 0.0,0.0,1.0};
   m_worldtrans=m_worldtrans*CamRotate;
   }
   if (axis.y!=0)
   {
-  CamRotate[0] = glm::vec4 {cos(angle), 0.0, sin(angle), 0.0};
+  CamRotate[0] = glm::vec4 {cos(angle), 0.0, -sin(angle), 0.0};
   CamRotate[1] = glm::vec4 {0.0, 1.0, 0.0, 0.0};
-  CamRotate[2] = glm::vec4 {-sin(angle), 0.0, cos(angle), 0.0};
+  CamRotate[2] = glm::vec4 {sin(angle), 0.0, cos(angle), 0.0};
   CamRotate[3] = glm::vec4 {0.0, 0.0, 0.0, 1.0};
   m_worldtrans=m_worldtrans*CamRotate;
   }
   if (axis.z!=0)
   {
-  CamRotate[0] = glm::vec4 {cos(angle), -sin(angle), 0.0, 0.0};
-  CamRotate[1] = glm::vec4 {sin(angle), cos(angle), 0.0, 0.0};
+  CamRotate[0] = glm::vec4 {cos(angle), sin(angle), 0.0, 0.0};
+  CamRotate[1] = glm::vec4 {-sin(angle), cos(angle), 0.0, 0.0};
   CamRotate[2] = glm::vec4 {0.0, 0.0, 1.0, 0.0};
   CamRotate[3] = glm::vec4 {0.0, 0.0, 0.0, 1.0};  
   m_worldtrans=m_worldtrans*CamRotate;
   }
 
+}
+
+void Camera::CamTranslate(glm::vec3 offset)
+{
+glm::mat4 CamTranslate;
+CamTranslate[0] = glm::vec4 {1.0f,0.0f,0.0f,0.0f};
+CamTranslate[1] = glm::vec4 {0.0f,1.0f,0.0f,0.0f};
+CamTranslate[2] = glm::vec4 {0.0f,0.0f,1.0f,0.0f};
+CamTranslate[3] = glm::vec4 {offset.x,offset.y,offset.z,1.0f};
+m_worldtrans=m_worldtrans*CamTranslate;
 }

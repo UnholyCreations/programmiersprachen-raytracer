@@ -162,6 +162,14 @@ Scene sdf_loader()
             ss>>axis.z;
             myscene.SceneCamera.CamRotate(angle,axis);
             }
+            if(keyword == "translate")
+            {
+            glm::vec3 offset;
+            ss>>offset.x;
+            ss>>offset.y;
+            ss>>offset.z;
+            myscene.SceneCamera.CamTranslate(offset);
+            }
             }
         }
 

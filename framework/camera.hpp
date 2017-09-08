@@ -25,7 +25,7 @@ public:
 
 	//setter
 	void CamRotate(float angle,glm::vec3 axis);
-
+	void CamTranslate(glm::vec3 offset);
 	//print
 	void print();
 	//DATA

@@ -39,8 +39,7 @@ float intersectionDistance;
 glm::vec3 new_dir;
 glm::vec3 new_pos;
 bool intersect;
-Color ninth={0.11f,0.11f,0.11f};
-Color pixel_color ={0.0f,0.0f,0.0f};
+Color pixel_color;
 //Color dof_color ={0.0f,0.0f,0.0f};
 
 
@@ -75,7 +74,7 @@ for (int y = 0; y < scene_.y_resolution; ++y)
         Ray dof_ray{new_pos,new_dir};
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
         Color dof_color = raytrace(dof_ray);
-        p.color += dof_color*ninth;
+        p.color += dof_color*0.11f;
          }
        } 
 
