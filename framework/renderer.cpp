@@ -29,6 +29,8 @@ Renderer::Renderer(Scene const& scene):
 
 void Renderer::render()
 {
+float startTime = omp_get_wtime();
+
 //focal_plane=scene_.SceneCamera.m_dir*m_focal;
 //focal_normal=-1.0f*glm::normalize(scene_.SceneCamera.m_dir*m_focal);
 //std::cout<<"focal_plane "<<focal_plane.x<<" "<<focal_plane.y<<" "<< focal_plane.z<<"\n";
@@ -40,8 +42,7 @@ float intersectionDistance;
 glm::vec3 new_dir;
 glm::vec3 new_pos;
 bool intersect;
-Color pixel_color;
-//Color dof_color ={0.0f,0.0f,0.0f};
+
 
 
 Ray plane_ray = scene_.SceneCamera.castray(0.0f,0.0f
@@ -50,45 +51,54 @@ focal_plane=m_focal*plane_ray.m_direction;
 focal_normal=glm::normalize(-plane_ray.m_direction);
 //std::cout<<"focal_plane:"<<focal_plane.x<<" "<<focal_plane.y<<" "<<focal_plane.z<<"\n";
 //std::cout<<"focal_normal:"<<focal_normal.x<<" "<<focal_normal.y<<" "<<focal_normal.z<<"\n";
-for (int y = 0; y < scene_.y_resolution; ++y)
+int x,y;
+//#pragma omp parallel for private(x)
+#pragma omp parallel for private(x,y) num_threads(2)
+for (y = 0; y < scene_.y_resolution; ++y)
   { 
-    for (int x = 0; x < scene_.x_resolution; ++x)
+    //#pragma omp parallel for private(x) num_threads(2) 
+    for (x = 0; x < scene_.x_resolution; ++x)
     {
     Pixel p(x,y);
       Ray camera_ray = scene_.SceneCamera.castray(float(x)-(scene_.x_resolution/2.0f),float(y)-(scene_.y_resolution/2.0f)
       ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
       intersect=glm::intersectRayPlane(camera_ray.m_origin,camera_ray.m_direction,focal_plane,focal_normal,intersectionDistance);
-      if (intersect==0) {std::cout<<"miss\n";} 
       //if (intersect==1) {p.color =test;} 
         //std::cout<<"old dir: "<<camera_ray.m_direction.x<<" "<<camera_ray.m_direction.y<<" "<<camera_ray.m_direction.z<<"\n";
         //std::cout<<"new dir: "<<new_dir.x<<" "<<new_dir.y<<" "<<new_dir.z<<"\n";
-        for (float xd=-5.0f; xd<=5.0f; xd+=5.0f)
+        //int xd,yd;
+        //#pragma omp parallel for private(xd) num_threads(2)
+        //#pragma omp parallel for private(xd,yd) num_threads(2)
+        for (int xd=-5; xd<=5; xd+=5)
         {
-        for (float yd=-5.0f; yd<=5.0f; yd+=5.0f)
+        ////#pragma omp parallel for private(yd) num_threads(2)
+        Color dof_color ={0.0f,0.0f,0.0f};
+        for (int yd=-5; yd<=5; yd+=5)
         {
         //Ray dof_ray = scene_.SceneCamera.castray(float(x)+xd-(scene_.x_resolution/2.0f),float(y)+yd-(scene_.y_resolution/2.0f)
         // ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);  
-        new_pos={scene_.SceneCamera.m_pos.x+xd,scene_.SceneCamera.m_pos.y+yd,scene_.SceneCamera.m_pos.z};
+
+        new_pos={scene_.SceneCamera.m_pos.x+float(xd),scene_.SceneCamera.m_pos.y+float(yd),scene_.SceneCamera.m_pos.z};
         new_dir=camera_ray.m_direction*intersectionDistance;
         new_dir={new_dir.x-xd,new_dir.y-yd,new_dir.z};
         new_dir=glm::normalize(new_dir);
         
         Ray dof_ray{new_pos,new_dir};
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
-        Color dof_color = raytrace(dof_ray);
+        dof_color = raytrace(dof_ray);
         p.color += dof_color*0.11f;
         
-        /*
-        for (float xa=-0.33f; xa<=0.33f; xa+=0.33f)
-        {
-        for (float ya=-0.33f; ya<=0.33f; ya+=0.33f)
-        {
-        Ray dof_ray{{new_pos.x+xa,new_pos.y+ya,new_pos.z},new_dir};
-        dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
-        Color dof_color = raytrace(dof_ray);
-        p.color += dof_color*0.012345679f;
-        }}
-        */
+        
+        //for (float xa=-0.33f; xa<=0.33f; xa+=0.33f)
+        //{
+        //for (float ya=-0.33f; ya<=0.33f; ya+=0.33f)
+        //{
+        //Ray dof_ray{{new_pos.x+xa,new_pos.y+ya,new_pos.z},new_dir};
+        //dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
+        //Color dof_color = raytrace(dof_ray);
+        //p.color += dof_color*0.012345679f;
+        //}}
+        
 
 
       
@@ -103,8 +113,12 @@ for (int y = 0; y < scene_.y_resolution; ++y)
       write(p);
     }
   }   
-    //ppm_.save("az");
+//ppm_.save("az");
+/////////////////////////////////////////////////////////////////
+float stopTime = omp_get_wtime();
+std::cout<<"render execulation time: "<<stopTime - startTime<<"\n";
 }
+
 
 Color Renderer::raytrace(Ray const& ray)
 {
@@ -137,6 +151,7 @@ Color Renderer::raytrace(Ray const& ray)
 }
 Color Renderer::shades(Hit const& hit,const int index)
 {
+
   Color Ia=addambient(hit);
   Color Ids=adddiffusespecular(hit,index);
   Color Ifog=addfog(hit,1000);
@@ -266,14 +281,15 @@ void Renderer::write(Pixel const& p)
 void Renderer::render()
 {
 glm::vec3 pos=scene_.SceneCamera.m_pos;
-
-Color ninth={0.11f,0.11f,0.11f};
-  for (int y = 0; y < scene_.y_resolution; ++y)
+  int y,x; 
+  #pragma omp parallel for private(y)
+  for (y = 0; y < scene_.y_resolution; ++y)
   { 
-    for (int x = 0; x < scene_.x_resolution; ++x)
+    #pragma omp parallel for private(x)
+    for (x = 0; x < scene_.x_resolution; ++x)
     {
     Pixel p(x,y);
-      for (float xa=-0.2f; xa<=0.2f; xa+=0.2f)
+      for (float xa=-0.2f; xa<=0.2f; xa+=0.2f) //am i mentally dead?
       {
       for (float ya=-0.2f; ya<=0.2f; ya+=0.2f)
       {
@@ -283,7 +299,7 @@ Color ninth={0.11f,0.11f,0.11f};
       //From pixels around x and y shoot rays through normalized returned vec3 and get intersections with objects
 
       Color pixel_color = raytrace(camera_ray);
-      p.color += pixel_color*ninth;
+      p.color += pixel_color*0.11;
       }}
       write(p);
     }

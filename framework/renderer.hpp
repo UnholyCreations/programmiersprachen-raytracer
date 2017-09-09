@@ -19,6 +19,8 @@
 #include <cmath>
 #include <iostream>
 #include <glm/glm.hpp>
+#include <time.h>
+#include <omp.h>
 class Renderer
 {
 public:
