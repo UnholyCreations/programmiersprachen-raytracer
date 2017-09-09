@@ -139,9 +139,19 @@ Scene sdf_loader()
   
             std::string name;
             int fov;
+            glm::vec3 pos,dir,up;
             ss>>name;
             ss>>fov;
-            Camera temp_camera{name, fov};
+            ss>>pos.x;
+            ss>>pos.y;
+            ss>>pos.z;
+            ss>>dir.x;
+            ss>>dir.y;
+            ss>>dir.z;
+            ss>>up.x;
+            ss>>up.y;
+            ss>>up.z;
+            Camera temp_camera{name, fov,pos,dir,up};
             myscene.SceneCamera=temp_camera;
             }
 

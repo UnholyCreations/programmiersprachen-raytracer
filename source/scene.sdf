@@ -8,35 +8,35 @@ define material yellow 1 1 0 1 1 0 0 0 0.3 5
 define material purple 0 1 1 0 1 1 0.3 0 0 5
 define material red2  1 0 0 1 0 0 0 0 0 1
 define material green2  0 1 0 0 1 0 0 0 0 1
-define material blue2  0 0 1 0 0 1 0 0 0 1
 # geometry
 define shape sphere sphere1 100 -60 20 25 blue
 
-define shape box box0 -25 -100 -25 25 -150 25 blue2
+
 
 define shape box box0 -80 -100 -25 -30 -150 25 blue2
-define shape box box0 -90 -100 -25 -140 -150 25 blue2
+define shape box box0 -90 -100 -25 -140 -150 -200 blue2
 define shape box box0 -150 -100 -25 -200 -150 25 blue2
 
 define shape box box0 30 -100 -25 80 -150 25 blue2
-define shape box box0 90 -100 -25 140 -150 25 blue2
-define shape box box0 150 -100 -25 200 -150 25 blue2
 
-define shape box box0 -25 -80 -25 25 -30 25 blue2
+define shape box box0 90 -100 -25 140 -150 200 blue2
+define shape box box0 150 -100 -25 200 -150 25 blue2
+define shape box box0 -25 -100 -25 25 -150 25 blue2
+define shape box box1 -25 -80 -25 25 -30 25 blue2
 
 
 # composite
 define shape composite root rbottom bsphere
 # scene xform
-# transform root scale 2 2 2
-transform root rotate 45 0 0 1
+transform box1 rotate 45 0 1 0
 transform root translate 0 0 -10
 # lights
 define light light1 0 0 100 1.0 1.0 1.0 1
 ambient 0.2 0.2 0.2
 # camera
-define camera eye 120
+focal 50
+define camera eye 120 -5 0 5 0 0 -1 0 1 0
 # camera xform
-transform eye rotate -45 0 1 0
-transform eye translate 100 0 100
+transform eye rotate -45 1 0 0
+transform eye translate 0 0 10
 # ... and gorender eye image . ppm

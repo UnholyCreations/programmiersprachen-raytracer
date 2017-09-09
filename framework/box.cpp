@@ -104,9 +104,7 @@ if (tmax > std::max(tmin, 0.0f))
    box_hit.m_distance=glm::length(trans_ray.m_origin-box_hit.m_intersect);
 
 
-   //glm::vec4 v{box_hit.m_intersect, 0.0f};
-  // glm::vec3 w(m_worldtrans);
-
+  
 
    if ((box_hit.m_intersect.x)==Approx(m_max.x))
         {
@@ -132,7 +130,6 @@ if (tmax > std::max(tmin, 0.0f))
         glm::vec4 n{box_hit.m_norm, 0.0f};
         glm::vec3 m(M * n);
         box_hit.m_norm = glm::normalize(m);
-
 
 return box_hit;
 }

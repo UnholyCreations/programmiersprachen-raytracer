@@ -62,9 +62,9 @@ for (int y = 0; y < scene_.y_resolution; ++y)
       //if (intersect==1) {p.color =test;} 
         //std::cout<<"old dir: "<<camera_ray.m_direction.x<<" "<<camera_ray.m_direction.y<<" "<<camera_ray.m_direction.z<<"\n";
         //std::cout<<"new dir: "<<new_dir.x<<" "<<new_dir.y<<" "<<new_dir.z<<"\n";
-        for (float xd=-2.0f; xd<=2.0f; xd+=2.0f)
+        for (float xd=-5.0f; xd<=5.0f; xd+=5.0f)
         {
-        for (float yd=-2.0f; yd<=2.0f; yd+=2.0f)
+        for (float yd=-5.0f; yd<=5.0f; yd+=5.0f)
         {
         //Ray dof_ray = scene_.SceneCamera.castray(float(x)+xd-(scene_.x_resolution/2.0f),float(y)+yd-(scene_.y_resolution/2.0f)
         // ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);  
@@ -72,22 +72,26 @@ for (int y = 0; y < scene_.y_resolution; ++y)
         new_dir=camera_ray.m_direction*intersectionDistance;
         new_dir={new_dir.x-xd,new_dir.y-yd,new_dir.z};
         new_dir=glm::normalize(new_dir);
+        
         Ray dof_ray{new_pos,new_dir};
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
         Color dof_color = raytrace(dof_ray);
         p.color += dof_color*0.11f;
+        
         /*
-        for (float xa=-0.2f; xa<=0.2f; xa+=0.2f)
+        for (float xa=-0.33f; xa<=0.33f; xa+=0.33f)
         {
-        for (float ya=-0.2f; ya<=0.2f; ya+=0.2f)
+        for (float ya=-0.33f; ya<=0.33f; ya+=0.33f)
         {
         Ray dof_ray{{new_pos.x+xa,new_pos.y+ya,new_pos.z},new_dir};
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
         Color dof_color = raytrace(dof_ray);
         p.color += dof_color*0.012345679f;
-        
-      }}
-      */
+        }}
+        */
+
+
+      
          }
        } 
 
@@ -99,7 +103,7 @@ for (int y = 0; y < scene_.y_resolution; ++y)
       write(p);
     }
   }   
-    ppm_.save(scene_.file_name);
+    //ppm_.save("az");
 }
 
 Color Renderer::raytrace(Ray const& ray)
@@ -136,8 +140,8 @@ Color Renderer::shades(Hit const& hit,const int index)
   Color Ia=addambient(hit);
   Color Ids=adddiffusespecular(hit,index);
   Color Ifog=addfog(hit,1000);
-  //Color Id=adddiffuse(hit);
   Color I=Ia+Ids;
+  I=gettonemapped(I);
   return I;
 
 }
@@ -194,13 +198,14 @@ return Id*kd;
 Color Renderer::adddiffusespecular(Hit const& hit,const int index)
 {
 Color kd=hit.m_shape_ptr->get_material().m_kd;
-Color Id={0,0,0};
 float dotproduct =0.0f;
 float Ip_RGB=0.0f;
 Color ks=hit.m_shape_ptr->get_material().m_ks;
 float m=hit.m_shape_ptr->get_material().m_m;
-Color Is={0,0,0};
 glm::vec3 internorm =hit.m_norm; //N
+
+Color Id={0,0,0};
+Color Is={0,0,0};
 Color Ids={0,0,0};
 Color UnShadows{1,1,1};
     for (int i=0;i<scene_.LightVector.size();i++)
@@ -286,3 +291,13 @@ Color ninth={0.11f,0.11f,0.11f};
     ppm_.save(scene_.file_name);
 }
 */
+
+
+Color Renderer::gettonemapped(Color const& color)
+{
+Color temp;
+temp.r = color.r/(color.r+1.0f);
+temp.g = color.g/(color.g+1.0f);
+temp.b = color.b/(color.b+1.0f);
+return temp;
+}

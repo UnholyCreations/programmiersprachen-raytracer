@@ -32,6 +32,7 @@ public:
   Color shades(Hit const& hit,const int index);
   Color addambient(Hit const& hit);
    Color adddiffuse(Hit const& hit);
+   Color gettonemapped(Color const& color);
    Color addfog(Hit const& hit,float end);
   Color adddiffusespecular(Hit const& hit,const int index);
   inline std::vector<Color> const& colorbuffer() const

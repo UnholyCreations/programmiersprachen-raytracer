@@ -16,12 +16,12 @@ Camera::Camera():
   m_worldtrans[2] = glm::vec4 {-1.0f*n, 0.0};
   m_worldtrans[3] = glm::vec4 {m_pos, 1.0};
   }
-Camera::Camera(std::string const& name,int const& fov):
+Camera::Camera(std::string const& name,int const& fov,glm::vec3 const& pos,glm::vec3 const& dir,glm::vec3 const& up):
   m_name (name),
   m_fov (fov),
-  m_pos {0,0,fov},
-  m_dir {0,0,-1},
-  m_up {0,1,0}
+  m_pos {pos.x,pos.y,pos.z+fov},
+  m_dir {dir},
+  m_up {up}
   {
   glm::vec3 n = glm::normalize(m_dir);
   glm::vec3 u = glm::normalize(glm::cross(n, m_up));
@@ -31,8 +31,11 @@ Camera::Camera(std::string const& name,int const& fov):
   m_worldtrans[1] = glm::vec4 {v, 0.0};
   m_worldtrans[2] = glm::vec4 {-1.0f*n, 0.0};
   m_worldtrans[3] = glm::vec4 {m_pos, 1.0};
-
   }
+
+  //m_pos {0,0,fov},
+  //m_dir {0,0,-1},
+  //m_up {0,1,0}
 Camera::~Camera(){}
 
 std::string const& Camera::get_name() const
