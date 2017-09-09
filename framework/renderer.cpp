@@ -37,11 +37,10 @@ float startTime = omp_get_wtime();
 //std::cout<<"focal_normal "<<focal_normal.x<<" "<<focal_normal.y<<" "<< focal_normal.z<<"\n";
 m_focal=scene_.dof_focal;
 glm::vec3 pos=scene_.SceneCamera.m_pos;
-float d;
-float intersectionDistance;
-glm::vec3 new_dir;
-glm::vec3 new_pos;
-bool intersect;
+//float intersectionDistance;
+//glm::vec3 new_dir;
+//glm::vec3 new_pos;
+//bool intersect;
 
 
 
@@ -51,9 +50,8 @@ focal_plane=m_focal*plane_ray.m_direction;
 focal_normal=glm::normalize(-plane_ray.m_direction);
 //std::cout<<"focal_plane:"<<focal_plane.x<<" "<<focal_plane.y<<" "<<focal_plane.z<<"\n";
 //std::cout<<"focal_normal:"<<focal_normal.x<<" "<<focal_normal.y<<" "<<focal_normal.z<<"\n";
-int x,y;
-//#pragma omp parallel for private(x)
-#pragma omp parallel for private(x,y) num_threads(2)
+int x,y,xd,yd;
+#pragma omp parallel for private(x,y,xd,yd) num_threads(4)
 for (y = 0; y < scene_.y_resolution; ++y)
   { 
     //#pragma omp parallel for private(x) num_threads(2) 
@@ -62,24 +60,25 @@ for (y = 0; y < scene_.y_resolution; ++y)
     Pixel p(x,y);
       Ray camera_ray = scene_.SceneCamera.castray(float(x)-(scene_.x_resolution/2.0f),float(y)-(scene_.y_resolution/2.0f)
       ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);
-      intersect=glm::intersectRayPlane(camera_ray.m_origin,camera_ray.m_direction,focal_plane,focal_normal,intersectionDistance);
+      float intersectionDistance;
+      bool intersect=glm::intersectRayPlane(camera_ray.m_origin,camera_ray.m_direction,focal_plane,focal_normal,intersectionDistance);
       //if (intersect==1) {p.color =test;} 
         //std::cout<<"old dir: "<<camera_ray.m_direction.x<<" "<<camera_ray.m_direction.y<<" "<<camera_ray.m_direction.z<<"\n";
         //std::cout<<"new dir: "<<new_dir.x<<" "<<new_dir.y<<" "<<new_dir.z<<"\n";
         //int xd,yd;
         //#pragma omp parallel for private(xd) num_threads(2)
         //#pragma omp parallel for private(xd,yd) num_threads(2)
-        for (int xd=-5; xd<=5; xd+=5)
+        for (xd=-5; xd<=5; xd+=5)
         {
         ////#pragma omp parallel for private(yd) num_threads(2)
         Color dof_color ={0.0f,0.0f,0.0f};
-        for (int yd=-5; yd<=5; yd+=5)
+        for (yd=-5; yd<=5; yd+=5)
         {
         //Ray dof_ray = scene_.SceneCamera.castray(float(x)+xd-(scene_.x_resolution/2.0f),float(y)+yd-(scene_.y_resolution/2.0f)
         // ,scene_.x_resolution/2.0f, scene_.y_resolution/2.0f);  
 
-        new_pos={scene_.SceneCamera.m_pos.x+float(xd),scene_.SceneCamera.m_pos.y+float(yd),scene_.SceneCamera.m_pos.z};
-        new_dir=camera_ray.m_direction*intersectionDistance;
+        glm::vec3 new_pos={scene_.SceneCamera.m_pos.x+float(xd),scene_.SceneCamera.m_pos.y+float(yd),scene_.SceneCamera.m_pos.z};
+        glm::vec3 new_dir=camera_ray.m_direction*intersectionDistance;
         new_dir={new_dir.x-xd,new_dir.y-yd,new_dir.z};
         new_dir=glm::normalize(new_dir);
         
