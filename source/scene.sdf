@@ -1,28 +1,26 @@
 # materials
 
-define material red  1 0 0 1 0 0 0 1 1 5
-define material blue 0 0 1 0 0 1 0.5 0.5 0 3
-define material blue2 0 0 1 0 0 1 0 0 0 5
-define material green 0 1 0 0 1 0 1 0 1 5
-define material yellow 1 1 0 1 1 0 0 0 0.3 5
-define material purple 0 1 1 0 1 1 0.3 0 0 5
-define material red2  1 0 0 1 0 0 0 0 0 1
-define material green2  0 1 0 0 1 0 0 0 0 1
+define material redb  1 0 0 1 0 0 0 0 0 5
+define material blues 0 0 1 0 0 1 0.5 0.5 0 3
+define material blueb 0 0 1 0 0 1 0 0 0 5
+define material greenb 0 1 0 0 1 0 0 0 0 3
+define material yellowb 1 1 0 1 1 0 0 0 0.3 5
+define material purpleb 0 1 1 0 1 1 0 0 0 3
 # geometry
-define shape sphere sphere1 100 -60 20 25 blue
+define shape sphere sphere1 100 -60 20 25 blues
 
 
 
-define shape box box0 -80 -100 -25 -30 -150 25 blue2
-define shape box box0 -90 -100 -25 -140 -150 -200 blue2
-define shape box box0 -150 -100 -25 -200 -150 25 blue2
+define shape box box0 -80 -100 -25 -30 -150 25 blueb
+define shape box box0 -90 -100 -25 -140 -150 -200 redb
+define shape box box0 -150 -100 -25 -200 -150 25 yellowb
 
-define shape box box0 30 -100 -25 80 -150 25 blue2
+define shape box box0 30 -100 -25 80 -150 25 purpleb
 
-define shape box box0 90 -100 -25 140 -150 200 blue2
-define shape box box0 150 -100 -25 200 -150 25 blue2
-define shape box box0 -25 -100 -25 25 -150 25 blue2
-define shape box box1 -25 -80 -25 25 -30 25 blue2
+define shape box box0 90 -100 -25 140 -150 200 blueb
+define shape box box0 150 -100 -25 200 -150 25 redb
+define shape box box0 -25 -100 -25 25 -150 25 purpleb
+define shape box box1 -25 -80 -25 25 -30 25 greenb
 
 
 # composite
@@ -31,12 +29,14 @@ define shape composite root rbottom bsphere
 transform box1 rotate 45 0 1 0
 transform root translate 0 0 -10
 # lights
-define light light1 0 0 100 1.0 1.0 1.0 1
+define light light1 -100 0 150 1.0 1.0 1.0 1
+define light light2 100 0 150 1.0 1.0 1.0 3
 ambient 0.2 0.2 0.2
 # camera
 focal 50
 define camera eye 120 -5 0 5 0 0 -1 0 1 0
 # camera xform
 transform eye rotate -45 1 0 0
+transform eye rotate -5 0 1 0
 transform eye translate 0 0 10
 # ... and gorender eye image . ppm

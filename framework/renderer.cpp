@@ -50,8 +50,8 @@ focal_plane=m_focal*plane_ray.m_direction;
 focal_normal=glm::normalize(-plane_ray.m_direction);
 //std::cout<<"focal_plane:"<<focal_plane.x<<" "<<focal_plane.y<<" "<<focal_plane.z<<"\n";
 //std::cout<<"focal_normal:"<<focal_normal.x<<" "<<focal_normal.y<<" "<<focal_normal.z<<"\n";
-int x,y,xd,yd;
-#pragma omp parallel for private(x,y,xd,yd) num_threads(4)
+int x,y,xd,yd,xa,ya;
+#pragma omp parallel for private(x,y,xd,yd,xa,ya) num_threads(8)
 for (y = 0; y < scene_.y_resolution; ++y)
   { 
     //#pragma omp parallel for private(x) num_threads(2) 
@@ -82,21 +82,21 @@ for (y = 0; y < scene_.y_resolution; ++y)
         new_dir={new_dir.x-xd,new_dir.y-yd,new_dir.z};
         new_dir=glm::normalize(new_dir);
         
-        Ray dof_ray{new_pos,new_dir};
-        dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
-        dof_color = raytrace(dof_ray);
-        p.color += dof_color*0.11f;
-        
-        
-        //for (float xa=-0.33f; xa<=0.33f; xa+=0.33f)
-        //{
-        //for (float ya=-0.33f; ya<=0.33f; ya+=0.33f)
-        //{
-        //Ray dof_ray{{new_pos.x+xa,new_pos.y+ya,new_pos.z},new_dir};
+        //Ray dof_ray{new_pos,new_dir};
         //dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
-        //Color dof_color = raytrace(dof_ray);
-        //p.color += dof_color*0.012345679f;
-        //}}
+        //dof_color = raytrace(dof_ray);
+        //p.color += dof_color*0.11f;
+        
+        
+        for (xa=-1; xa<=1; xa+=1)
+        {
+        for (ya=-1; ya<=1; ya+=1)
+        {
+        Ray dof_ray{{new_pos.x+float(xa)*0.33f,new_pos.y+float(ya)*0.33f,new_pos.z},new_dir};
+        dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
+        Color dof_color = raytrace(dof_ray);
+        p.color += dof_color*0.012345679f;
+        }}
         
 
 
@@ -225,7 +225,7 @@ Color UnShadows{1,1,1};
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
-          Ray shadowray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
+          Ray shadowray {hit.m_intersect + lightnorm * 0.05f,lightnorm};
           shadowray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
           for (int i=0;i<scene_.ShapeVector.size();i++)
           {   
@@ -234,7 +234,7 @@ Color UnShadows{1,1,1};
           if (shadowhit.m_distance<lightdistance ) { //works
               if (i!=index)
               {
-              UnShadows={0,0,0};
+              UnShadows={0.0f,0.0f,0.0f};
               break;
               }
            }
@@ -255,7 +255,7 @@ Color UnShadows{1,1,1};
           Color Ip_RGB_mod={Ip_RGB*RdotVpowM,Ip_RGB*RdotVpowM,Ip_RGB*RdotVpowM};
           Is=Is+ks*Ip_RGB_mod;
 
-          Ids=(Is+Id)*UnShadows;
+          Ids=0.5f*(Ids+(Is+Id)*UnShadows);
         }
     return Ids;
 }
