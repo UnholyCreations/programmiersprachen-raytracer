@@ -53,19 +53,19 @@ Hit box_hit;
 Ray trans_ray=transformRay(m_worldtrans_inv,ray);
 float tmin, tmax, tymin, tymax, tzmin, tzmax;
 if (trans_ray.m_direction.x >= 0) {
-    tmin = (m_min.x - trans_ray.m_origin.x) / trans_ray.m_direction.x;
-    tmax = (m_max.x - trans_ray.m_origin.x) / trans_ray.m_direction.x;
+    tmin = (m_min.x - trans_ray.m_origin.x) * trans_ray.m_inverse.x;
+    tmax = (m_max.x - trans_ray.m_origin.x) * trans_ray.m_inverse.x;
 }
 else {
-    tmin = (m_max.x - trans_ray.m_origin.x) / trans_ray.m_direction.x;
-    tmax = (m_min.x - trans_ray.m_origin.x) / trans_ray.m_direction.x;
+    tmin = (m_max.x - trans_ray.m_origin.x) * trans_ray.m_inverse.x;
+    tmax = (m_min.x - trans_ray.m_origin.x) * trans_ray.m_inverse.x;
 }
 if (trans_ray.m_direction.y >= 0) {
-    tymin = (m_min.y - trans_ray.m_origin.y) / trans_ray.m_direction.y;
-    tymax = (m_max.y - trans_ray.m_origin.y) / trans_ray.m_direction.y;
+    tymin = (m_min.y - trans_ray.m_origin.y) * trans_ray.m_inverse.y;
+    tymax = (m_max.y - trans_ray.m_origin.y) * trans_ray.m_inverse.y;
 } else {
-    tymin = (m_max.y - trans_ray.m_origin.y) / trans_ray.m_direction.y;
-    tymax = (m_min.y - trans_ray.m_origin.y) / trans_ray.m_direction.y;
+    tymin = (m_max.y - trans_ray.m_origin.y) * trans_ray.m_inverse.y;
+    tymax = (m_min.y - trans_ray.m_origin.y) * trans_ray.m_inverse.y;
 }
 if ((tmin > tymax) || (tymin > tmax)) {
   box_hit.m_hit=false;
@@ -78,11 +78,11 @@ if (tymax < tmax) {
     tmax = tymax;
 }
 if (trans_ray.m_direction.z >= 0) {
-    tzmin = (m_min.z - trans_ray.m_origin.z) / trans_ray.m_direction.z;
-    tzmax = (m_max.z - trans_ray.m_origin.z) / trans_ray.m_direction.z;
+    tzmin = (m_min.z - trans_ray.m_origin.z) * trans_ray.m_inverse.z;
+    tzmax = (m_max.z - trans_ray.m_origin.z) * trans_ray.m_inverse.z;
 } else {
-    tzmin = (m_max.z - trans_ray.m_origin.z) / trans_ray.m_direction.z;
-    tzmax = (m_min.z - trans_ray.m_origin.z) / trans_ray.m_direction.z;
+    tzmin = (m_max.z - trans_ray.m_origin.z) * trans_ray.m_inverse.z;
+    tzmax = (m_min.z - trans_ray.m_origin.z) * trans_ray.m_inverse.z;
 }
 if ((tmin > tzmax) || (tzmin > tmax)) {
   box_hit.m_hit=false;

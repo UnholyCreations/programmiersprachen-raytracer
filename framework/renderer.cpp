@@ -25,7 +25,7 @@ Renderer::Renderer(Scene const& scene):
     //focal_plane=scene_.SceneCamera.m_dir*m_focal;
     }
 
-
+/*
 
 void Renderer::render()
 {
@@ -117,7 +117,7 @@ for (y = 0; y < scene_.y_resolution; ++y)
 float stopTime = omp_get_wtime();
 std::cout<<"render execulation time: "<<stopTime - startTime<<"\n";
 }
-
+*/
 
 Color Renderer::raytrace(Ray const& ray)
 {
@@ -276,9 +276,10 @@ void Renderer::write(Pixel const& p)
 
   ppm_.write(p);
 }
-/*
+
 void Renderer::render()
 {
+float startTime = omp_get_wtime();
 glm::vec3 pos=scene_.SceneCamera.m_pos;
   int y,x; 
   #pragma omp parallel for private(y)
@@ -304,8 +305,10 @@ glm::vec3 pos=scene_.SceneCamera.m_pos;
     }
   }   
     ppm_.save(scene_.file_name);
+    float stopTime = omp_get_wtime();
+    std::cout<<"render execulation time: "<<stopTime - startTime<<"\n";
 }
-*/
+
 
 
 Color Renderer::gettonemapped(Color const& color)
