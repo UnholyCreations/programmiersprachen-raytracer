@@ -1,11 +1,11 @@
 # materials
 
-define material redb  1 0 0 1 0 0 0 0 0 5
-define material blues 0 0 1 0 0 1 0.5 0.5 0 3
+define material redb  1 0 0 1 0 0 1 1 1 5
+define material blues 0 0 1 0 0 1 1 1 1 7
 define material blueb 0 0 1 0 0 1 0 0 0 5
-define material greenb 0 1 0 0 1 0 0 0 0 3
-define material yellowb 1 1 0 1 1 0 0 0 0.3 5
-define material purpleb 0 1 1 0 1 1 0 0 0 3
+define material greenb 0 1 0 0 1 0 0 0 0 5
+define material yellowb 1 1 0 1 1 0 0 0 0 5
+define material purpleb 0 1 1 0 1 1 0 0 0 5
 # geometry
 define shape sphere sphere1 100 -60 20 25 blues
 
@@ -29,8 +29,8 @@ define shape composite root rbottom bsphere
 transform box1 rotate 45 0 1 0
 transform root translate 0 0 -10
 # lights
-define light light1 -100 0 150 1.0 1.0 1.0 1
-define light light2 100 0 150 1.0 1.0 1.0 3
+define light light1 400 50 200 1.0 1.0 1.0 3
+define light light2 300 100 150 1.0 1.0 1.0 7
 ambient 0.2 0.2 0.2
 # camera
 focal 50

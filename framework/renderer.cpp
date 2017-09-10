@@ -25,7 +25,7 @@ Renderer::Renderer(Scene const& scene):
     //focal_plane=scene_.SceneCamera.m_dir*m_focal;
     }
 
-/*
+
 
 void Renderer::render()
 {
@@ -117,7 +117,7 @@ for (y = 0; y < scene_.y_resolution; ++y)
 float stopTime = omp_get_wtime();
 std::cout<<"render execulation time: "<<stopTime - startTime<<"\n";
 }
-*/
+
 
 Color Renderer::raytrace(Ray const& ray)
 {
@@ -215,35 +215,31 @@ Color kd=hit.m_shape_ptr->get_material().m_kd;
 float dotproduct =0.0f;
 Color Ip_RGB={0.0f,0.0f,0.0f};
 Color ks=hit.m_shape_ptr->get_material().m_ks;
-float m=hit.m_shape_ptr->get_material().m_m;
+int m=hit.m_shape_ptr->get_material().m_m;
 glm::vec3 internorm =hit.m_norm; //N
 
 Color Id={0.0f,0.0f,0.0f};
 Color Is={0.0f,0.0f,0.0f};
 Color Ids={0.0f,0.0f,0.0f};
-Color UnShadows{1.0f,1.0f,1.0f};
+float UnShadows=1.0f;
     for (int i=0;i<scene_.LightVector.size();i++)
         {
-          ////////////// LIGHT NORMAL
+          ////////////// LIGHT NORMAL AND RAY
           glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
+          Ray lightray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
+          lightray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
           //////////////SHADOW CODE
-          Ray shadowray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
-          shadowray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
           for (int j=0;j<scene_.ShapeVector.size();j++)
           {   
-          Hit shadowhit=scene_.ShapeVector[j]->intersect(shadowray);
+          Hit shadowhit=scene_.ShapeVector[j]->intersect(lightray);
           float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[j].m_pos);
           if (shadowhit.m_distance<lightdistance ) { //works
               if (j!=index)
               {
-              UnShadows={0.0f,0.0f,0.0f};
+              UnShadows=0.0f;
               break;
               }
            }
-           else
-           {
-            UnShadows={1.0f,1.0f,1.0f};
-           };
           }
           //////////////SHADOW CODE END
           //diffuse
@@ -252,21 +248,17 @@ Color UnShadows{1.0f,1.0f,1.0f};
           Id=Id+kd*dotproduct;
 
           //specular  
-          //glm::vec3 v =glm::normalize(-ray.m_direction); //V
           glm::vec3 v =glm::normalize(ray.m_direction);
           //glm::vec3 v=glm::normalize(hit.m_intersect-scene_.SceneCamera.m_pos);
           glm::vec3 r=glm::reflect(lightnorm,hit.m_norm); //R
+          if (m%2==0) {m+=1;} // m soll durch 2 teilbar sein
           float RdotVpowM=pow(glm::dot(r,v),m);
           RdotVpowM=std::max(RdotVpowM,0.0f);
           Is=Is+ks*RdotVpowM;
           //LIGHT INTENSITY
 
 
-          if (i==0) {Ip_RGB=scene_.LightVector[i].m_brightness*scene_.LightVector[i].m_color;}
-          else
-          {
-          Ip_RGB=0.5f*(Ip_RGB+scene_.LightVector[i].m_brightness*scene_.LightVector[i].m_color);
-          }
+          Ip_RGB=scene_.LightVector[i].m_brightness*scene_.LightVector[i].m_color;
 
 
           if (i==0) {Ids=Ip_RGB*(Id+Is)*UnShadows;}
@@ -292,7 +284,7 @@ void Renderer::write(Pixel const& p)
 
   ppm_.write(p);
 }
-
+/*
 void Renderer::render()
 {
 float startTime = omp_get_wtime();
@@ -325,7 +317,7 @@ glm::vec3 pos=scene_.SceneCamera.m_pos;
     float stopTime = omp_get_wtime();
     std::cout<<"render execulation time: "<<stopTime - startTime<<"\n";
 }
-
+*/
 
 
 Color Renderer::gettonemapped(Color const& color)
