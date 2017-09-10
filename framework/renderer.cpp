@@ -144,15 +144,15 @@ Color Renderer::raytrace(Ray const& ray)
   }
   else
   {
-  pixel_color=shades(first_hit,shortest_obj_index);
+  pixel_color=shades(first_hit,shortest_obj_index,ray);
   }
   return pixel_color;
 }
-Color Renderer::shades(Hit const& hit,const int index)
+Color Renderer::shades(Hit const& hit,const int index,Ray const& ray)
 {
 
   Color Ia=addambient(hit);
-  Color Ids=adddiffusespecular(hit,index);
+  Color Ids=adddiffusespecular(hit,index,ray);
   Color Ifog=addfog(hit,1000);
   Color I=Ia+Ids;
   I=gettonemapped(I);
@@ -209,30 +209,32 @@ return Id*kd;
 //https://stackoverflow.com/questions/31064234/find-the-angle-between-two-vectors-from-an-arbitrary-origin#31064328
 //Never forget the credit ;)
 
-Color Renderer::adddiffusespecular(Hit const& hit,const int index)
+Color Renderer::adddiffusespecular(Hit const& hit,const int index,Ray const& ray)
 {
 Color kd=hit.m_shape_ptr->get_material().m_kd;
 float dotproduct =0.0f;
-float Ip_RGB=0.0f;
+Color Ip_RGB={0.0f,0.0f,0.0f};
 Color ks=hit.m_shape_ptr->get_material().m_ks;
 float m=hit.m_shape_ptr->get_material().m_m;
 glm::vec3 internorm =hit.m_norm; //N
 
-Color Id={0,0,0};
-Color Is={0,0,0};
-Color Ids={0,0,0};
-Color UnShadows{1,1,1};
+Color Id={0.0f,0.0f,0.0f};
+Color Is={0.0f,0.0f,0.0f};
+Color Ids={0.0f,0.0f,0.0f};
+Color UnShadows{1.0f,1.0f,1.0f};
     for (int i=0;i<scene_.LightVector.size();i++)
         {
+          ////////////// LIGHT NORMAL
           glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
-          Ray shadowray {hit.m_intersect + lightnorm * 0.05f,lightnorm};
+          //////////////SHADOW CODE
+          Ray shadowray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
           shadowray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
-          for (int i=0;i<scene_.ShapeVector.size();i++)
+          for (int j=0;j<scene_.ShapeVector.size();j++)
           {   
-          Hit shadowhit=scene_.ShapeVector[i]->intersect(shadowray);
-          float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[i].m_pos);
+          Hit shadowhit=scene_.ShapeVector[j]->intersect(shadowray);
+          float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[j].m_pos);
           if (shadowhit.m_distance<lightdistance ) { //works
-              if (i!=index)
+              if (j!=index)
               {
               UnShadows={0.0f,0.0f,0.0f};
               break;
@@ -240,22 +242,36 @@ Color UnShadows{1,1,1};
            }
            else
            {
-            UnShadows={1,1,1};
+            UnShadows={1.0f,1.0f,1.0f};
            };
           }
-          
-          dotproduct = glm::dot(internorm,lightnorm); 
-          Ip_RGB=scene_.LightVector[i].m_brightness;
-          Ip_RGB*=dotproduct;
-          Id=Id+kd*Ip_RGB;
-          glm::vec3 cameranorm =glm::normalize(hit.m_intersect-scene_.SceneCamera.m_pos); //V
-          glm::vec3 reflect=2*glm::dot(internorm,lightnorm)*internorm-lightnorm; //R
-          float RdotVpowM=pow(glm::dot(reflect,lightnorm),m);
-          Ip_RGB=scene_.LightVector[i].m_brightness;
-          Color Ip_RGB_mod={Ip_RGB*RdotVpowM,Ip_RGB*RdotVpowM,Ip_RGB*RdotVpowM};
-          Is=Is+ks*Ip_RGB_mod;
+          //////////////SHADOW CODE END
+          //diffuse
+          dotproduct = glm::dot(internorm,lightnorm);
+          dotproduct = std::max(dotproduct,0.0f); 
+          Id=Id+kd*dotproduct;
 
-          Ids=0.5f*(Ids+(Is+Id)*UnShadows);
+          //specular  
+          //glm::vec3 v =glm::normalize(-ray.m_direction); //V
+          glm::vec3 v =glm::normalize(ray.m_direction);
+          //glm::vec3 v=glm::normalize(hit.m_intersect-scene_.SceneCamera.m_pos);
+          glm::vec3 r=glm::reflect(lightnorm,hit.m_norm); //R
+          float RdotVpowM=pow(glm::dot(r,v),m);
+          RdotVpowM=std::max(RdotVpowM,0.0f);
+          Is=Is+ks*RdotVpowM;
+          //LIGHT INTENSITY
+
+
+          if (i==0) {Ip_RGB=scene_.LightVector[i].m_brightness*scene_.LightVector[i].m_color;}
+          else
+          {
+          Ip_RGB=0.5f*(Ip_RGB+scene_.LightVector[i].m_brightness*scene_.LightVector[i].m_color);
+          }
+
+
+          if (i==0) {Ids=Ip_RGB*(Id+Is)*UnShadows;}
+          else
+          {Ids=0.5f*(Ids+Ip_RGB*(Id+Is)*UnShadows);}
         }
     return Ids;
 }
@@ -299,8 +315,9 @@ glm::vec3 pos=scene_.SceneCamera.m_pos;
       //From pixels around x and y shoot rays through normalized returned vec3 and get intersections with objects
 
       Color pixel_color = raytrace(camera_ray);
-      p.color += pixel_color*0.11;
+      p.color += pixel_color*0.11f;
       }}
+      //p.color=gettonemapped(p.color);
       write(p);
     }
   }   

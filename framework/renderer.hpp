@@ -31,12 +31,12 @@ public:
   void write(Pixel const& p);
 
   Color raytrace(Ray const& ray);  
-  Color shades(Hit const& hit,const int index);
+  Color shades(Hit const& hit,const int index,Ray const& ray);
   Color addambient(Hit const& hit);
    Color adddiffuse(Hit const& hit);
    Color gettonemapped(Color const& color);
    Color addfog(Hit const& hit,float end);
-  Color adddiffusespecular(Hit const& hit,const int index);
+  Color adddiffusespecular(Hit const& hit,const int index,Ray const& ray);
   inline std::vector<Color> const& colorbuffer() const
   {
     return colorbuffer_;

@@ -79,7 +79,7 @@ Hit Sphere::intersect(Ray const& ray)
   sphere_hit.m_norm = glm::normalize(m);
 
   }
-  
+
 	
 
 	/*

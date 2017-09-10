@@ -28,10 +28,18 @@ glm::vec3 const& Box::get_max() const
 
 double Box::area() const
 {
+  glm::vec3 seiten=m_max-m_min;
+  double x=seiten.x;
+  double y=seiten.y;
+  double z=seiten.z;
 	return (x*y+x*z+z*y)*2;
 }
 double Box::volume() const
 {
+  glm::vec3 seiten=m_max-m_min;
+  double x=seiten.x;
+  double y=seiten.y;
+  double z=seiten.z;
 	return x*y*z;
 }
 
