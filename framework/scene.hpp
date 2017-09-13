@@ -59,6 +59,59 @@ struct Scene
     {
         std::cout<<"col:"<<SceneAmbience.r<<" "<<SceneAmbience.g<<" "<<SceneAmbience.b<<"\n";
     }
+    void Print_max_min()
+    {
+    /* 
+    for (int i=0;i<ShapeVector.size();i++)
+    {   
+    std::string name=ShapeVector[i]->get_name();
+    glm::vec3 print_max= ShapeVector[i]->get_max();
+    glm::vec3 print_min= ShapeVector[i]->get_min();
+    /
+    std::cout<<"-----------------------------------\n";
+    std::cout<<"name: "<<name<<"\n";
+    std::cout<<"m_max: "<<print_max.x<<" "<<print_max.y<<" "<<print_max.z<<"\n";
+    std::cout<<"m_min: "<<print_min.x<<" "<<print_min.y<<" "<<print_min.z<<"\n";
+    std::cout<<"-----------------------------------\n";
+    
+    }
+    */
+    glm::vec3 print_max=get_max();
+    glm::vec3 print_min=get_min();
+    std::cout<<"Scene max: "<<print_max.x<<" "<<print_max.y<<" "<<print_max.z<<"\n";
+    std::cout<<"Scene min: "<<print_min.x<<" "<<print_min.y<<" "<<print_min.z<<"\n";
+    }
+
+
+    glm::vec3 get_max()
+    {
+    glm::vec3 max{0.0f,0.0f,0.0f};
+    glm::vec3 temp;
+    for (int i=0;i<ShapeVector.size();i++)
+    {
+    temp=ShapeVector[i]->get_max();
+    if (temp.x>max.x) {max.x=temp.x;};
+    if (temp.y>max.y) {max.y=temp.y;};
+    if (temp.z>max.z) {max.z=temp.z;};
+    }
+    return max;
+    }
+
+    glm::vec3 get_min()
+    {
+    glm::vec3 min{0.0f,0.0f,0.0f};
+    glm::vec3 temp;
+    for (int i=0;i<ShapeVector.size();i++)
+    {
+    temp=ShapeVector[i]->get_min();
+    if (temp.x<min.x) {min.x=temp.x;};
+    if (temp.y<min.y) {min.y=temp.y;};
+    if (temp.z<min.z) {min.z=temp.z;};
+    }
+    return min;
+    }
+
+
 };
 
 

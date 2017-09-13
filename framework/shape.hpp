@@ -20,6 +20,9 @@ public:
   //Virtual Methods
   virtual double area() const = 0;
   virtual double volume() const = 0;
+  virtual glm::vec3 get_min() const=0;
+  virtual glm::vec3 get_max() const=0;
+
   virtual std::ostream & print (std::ostream & os) const=0;
   virtual Hit intersect(Ray const& ray) = 0;
   //Const Attributes

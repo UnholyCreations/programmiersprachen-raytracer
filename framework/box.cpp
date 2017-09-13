@@ -17,11 +17,11 @@ Box::~Box() {}; //desturctor
 
 
 
-glm::vec3 const& Box::get_min() const
+glm::vec3 Box::get_min() const
 {
 	return m_min;
 }
-glm::vec3 const& Box::get_max() const
+glm::vec3 Box::get_max() const
 {
 	return m_max;
 }	
@@ -138,6 +138,10 @@ if (tmax > std::max(tmin, 0.0f))
         glm::vec4 n{box_hit.m_norm, 0.0f};
         glm::vec3 m(M * n);
         box_hit.m_norm = glm::normalize(m);
-
+        
+        glm::vec4 q(box_hit.m_intersect,1.0f);
+        glm::vec3 p{m_worldtrans*q};
+        box_hit.m_intersect=p;
+        
 return box_hit;
 }

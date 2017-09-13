@@ -29,6 +29,7 @@ Renderer::Renderer(Scene const& scene):
 
 void Renderer::render()
 {
+
 float startTime = omp_get_wtime();
 
 //focal_plane=scene_.SceneCamera.m_dir*m_focal;
@@ -51,7 +52,7 @@ focal_normal=glm::normalize(-plane_ray.m_direction);
 //std::cout<<"focal_plane:"<<focal_plane.x<<" "<<focal_plane.y<<" "<<focal_plane.z<<"\n";
 //std::cout<<"focal_normal:"<<focal_normal.x<<" "<<focal_normal.y<<" "<<focal_normal.z<<"\n";
 int x,y,xd,yd,xa,ya;
-#pragma omp parallel for private(x,y,xd,yd,xa,ya) num_threads(8)
+#pragma omp parallel for private(x,y,xd,yd,xa,ya)
 for (y = 0; y < scene_.y_resolution; ++y)
   { 
     //#pragma omp parallel for private(x) num_threads(2) 
@@ -124,7 +125,9 @@ Color Renderer::raytrace(Ray const& ray)
   Hit first_hit;
   Color pixel_color=Color{0,0,0};
   double shortest = INFINITY; 
-  int shortest_obj_index;
+  int shortest_obj_index; 
+  //if (intersectAABB(ray)==true)
+  //{
   for (int i=0;i<scene_.ShapeVector.size();i++)
         {   
         Hit hit=scene_.ShapeVector[i]->intersect(ray);
@@ -138,6 +141,7 @@ Color Renderer::raytrace(Ray const& ray)
           }
         }
         };
+ // }      
   if(shortest == INFINITY)
   {
   pixel_color = Color{scene_.SceneAmbience.r,scene_.SceneAmbience.g,scene_.SceneAmbience.b};
@@ -221,13 +225,13 @@ glm::vec3 internorm =hit.m_norm; //N
 Color Id={0.0f,0.0f,0.0f};
 Color Is={0.0f,0.0f,0.0f};
 Color Ids={0.0f,0.0f,0.0f};
-float UnShadows=1.0f;
+bool UnShadows=1;
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           ////////////// LIGHT NORMAL AND RAY
           glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
           Ray lightray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
-          lightray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
+          //lightray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
           //////////////SHADOW CODE
           for (int j=0;j<scene_.ShapeVector.size();j++)
           {   
@@ -236,11 +240,14 @@ float UnShadows=1.0f;
           if (shadowhit.m_distance<lightdistance ) { //works
               if (j!=index)
               {
-              UnShadows=0.0f;
+              UnShadows=0;
               break;
               }
            }
           }
+
+          if (UnShadows==1)
+          {
           //////////////SHADOW CODE END
           //diffuse
           dotproduct = glm::dot(internorm,lightnorm);
@@ -261,9 +268,14 @@ float UnShadows=1.0f;
           Ip_RGB=scene_.LightVector[i].m_brightness*scene_.LightVector[i].m_color;
 
 
-          if (i==0) {Ids=Ip_RGB*(Id+Is)*UnShadows;}
+          if (i==0) {Ids=Ip_RGB*(Id+Is);}
           else
-          {Ids=0.5f*(Ids+Ip_RGB*(Id+Is)*UnShadows);}
+          {Ids=0.5f*(Ids+Ip_RGB*(Id+Is));}
+          }
+          else
+          {
+          Ids={0.0f,0.0f,0.0f};
+          }
         }
     return Ids;
 }
@@ -327,4 +339,74 @@ temp.r = color.r/(color.r+1.0f);
 temp.g = color.g/(color.g+1.0f);
 temp.b = color.b/(color.b+1.0f);
 return temp;
+}
+
+bool Renderer::intersectAABB(Ray const& ray)
+{
+glm::vec3 max=scene_.get_max();
+glm::vec3 min=scene_.get_min();
+if 
+(
+ray.m_origin.x>min.x &&
+ray.m_origin.y>min.y &&
+ray.m_origin.z>min.z &&
+ray.m_origin.x>max.x &&
+ray.m_origin.y>max.y &&
+ray.m_origin.z>max.z 
+) 
+{
+  return 1;
+}
+
+
+float tmin, tmax, tymin, tymax, tzmin, tzmax;
+if (ray.m_direction.x >= 0) {
+    tmin = (min.x - ray.m_origin.x) * ray.m_inverse.x;
+    tmax = (max.x - ray.m_origin.x) * ray.m_inverse.x;
+}
+else {
+    tmin = (max.x - ray.m_origin.x) * ray.m_inverse.x;
+    tmax = (min.x - ray.m_origin.x) * ray.m_inverse.x;
+}
+if (ray.m_direction.y >= 0) {
+    tymin = (min.y - ray.m_origin.y) * ray.m_inverse.y;
+    tymax = (max.y - ray.m_origin.y) * ray.m_inverse.y;
+} else {
+    tymin = (max.y - ray.m_origin.y) * ray.m_inverse.y;
+    tymax = (min.y - ray.m_origin.y) * ray.m_inverse.y;
+}
+if ((tmin > tymax) || (tymin > tmax)) {
+    return 0;
+}
+if (tymin > tmin) {
+    tmin = tymin;
+}
+if (tymax < tmax) {
+    tmax = tymax;
+}
+if (ray.m_direction.z >= 0) {
+    tzmin = (min.z - ray.m_origin.z) * ray.m_inverse.z;
+    tzmax = (max.z - ray.m_origin.z) * ray.m_inverse.z;
+} else {
+    tzmin = (max.z - ray.m_origin.z) * ray.m_inverse.z;
+    tzmax = (min.z - ray.m_origin.z) * ray.m_inverse.z;
+}
+if ((tmin > tzmax) || (tzmin > tmax)) {
+    return 0;
+}
+if (tzmin > tmin) {
+    tmin = tzmin;
+}
+if (tzmax < tmax) {
+    tmax = tzmax;
+}
+
+if (tmax > std::max(tmin, 0.0f))
+{
+return 1;
+}
+else
+{
+return 0;
+}
 }

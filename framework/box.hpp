@@ -27,9 +27,7 @@ public:
 	double volume() const override;
 	std::ostream & print (std::ostream & os) const override;
 	Hit intersect(Ray const& ray) override;
-	
-	//Functions
-	glm::vec3 const& get_min() const;
-	glm::vec3 const& get_max() const;
+	glm::vec3 get_min() const override;
+	glm::vec3 get_max() const override;
 };
 #endif

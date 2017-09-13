@@ -10,7 +10,7 @@ class Sphere: public Shape
 {
 protected:
   glm::vec3 m_center;
-  double m_radius;
+  float m_radius;
 public:
 	//Constructors
 	Sphere(); // default constructor
@@ -19,6 +19,8 @@ public:
 	//Function Overrides
 	double area() const override;
 	double volume() const override;
+	glm::vec3 get_min() const override;
+	glm::vec3 get_max() const override;
 	std::ostream & print (std::ostream & os) const override;
 	Hit intersect(Ray const& ray) override;
 

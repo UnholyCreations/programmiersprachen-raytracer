@@ -25,7 +25,14 @@ Sphere::~Sphere()//destructor
 
 
 
-
+glm::vec3 Sphere::get_min() const
+{
+	return m_center+glm::vec3{m_radius,m_radius,m_radius};
+}
+glm::vec3 Sphere::get_max() const
+{
+	return m_center+glm::vec3{-m_radius,-m_radius,-m_radius};
+}	
 
 glm::vec3 const& Sphere::get_center() const{
 
@@ -73,11 +80,21 @@ Hit Sphere::intersect(Ray const& ray)
     sphere_hit.m_distance = glm::length(trans_ray.m_origin-sphere_hit.m_intersect);
   sphere_hit.m_shape_ptr = this;
   sphere_hit.m_norm=glm::normalize(sphere_hit.m_intersect-m_center);
-  glm::mat4 M = glm::transpose(m_worldtrans_inv);
-  glm::vec4 n{sphere_hit.m_norm, 0.0f};
-  glm::vec3 m(M * n);
-  sphere_hit.m_norm = glm::normalize(m);
+         glm::mat4 M = glm::transpose(m_worldtrans_inv);
+        glm::vec4 n{sphere_hit.m_norm, 0.0f};
+        glm::vec3 m(M * n);
+		sphere_hit.m_norm = glm::normalize(m);
 
+		        
+        glm::vec4 q(sphere_hit.m_intersect,1.0f);
+        glm::vec3 p{m_worldtrans*q};
+        sphere_hit.m_intersect=p;
+        
+		/*
+		   glm::vec4 q(sphere_hit.m_intersect,1.0f);
+        glm::vec3 p{m_worldtrans_inv*q};
+        sphere_hit.m_intersect=p;
+		*/
   }
 
 	

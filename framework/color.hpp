@@ -168,6 +168,90 @@ struct Color
     return tmp;
   }
 
+  friend Color operator*(Color const& a, bool b)
+  {
+    auto tmp(a);
+    tmp.r = a.r * b;
+    tmp.g = a.g * b;
+    tmp.b = a.b * b;
+
+    return tmp;
+  }
+
+  friend Color operator*(bool b,Color const& a)
+  {
+    auto tmp(a);
+    tmp.r = a.r * b;
+    tmp.g = a.g * b;
+    tmp.b = a.b * b;
+
+    return tmp;
+  }
+
+
+  friend Color operator/(Color const& a, bool b)
+  {
+    auto tmp(a);
+    tmp.r = a.r / b;
+    tmp.g = a.g / b;
+    tmp.b = a.b / b;
+
+    return tmp;
+  }
+
+  friend Color operator/(bool b,Color const& a)
+  {
+    auto tmp(a);
+    tmp.r = a.r / b;
+    tmp.g = a.g / b;
+    tmp.b = a.b / b;
+
+    return tmp;
+  }
+
+
+  friend Color operator+(Color const& a, bool b)
+  {
+    auto tmp(a);
+    tmp.r = a.r + b;
+    tmp.g = a.g + b;
+    tmp.b = a.b + b;
+
+    return tmp;
+  }
+
+  friend Color operator+(bool b,Color const& a)
+  {
+    auto tmp(a);
+    tmp.r = a.r + b;
+    tmp.g = a.g + b;
+    tmp.b = a.b + b;
+
+    return tmp;
+  }
+
+
+  friend Color operator-(Color const& a, bool b)
+  {
+    auto tmp(a);
+    tmp.r = a.r - b;
+    tmp.g = a.g - b;
+    tmp.b = a.b - b;
+
+    return tmp;
+  }
+
+  friend Color operator-(bool b,Color const& a)
+  {
+    auto tmp(a);
+    tmp.r = a.r - b;
+    tmp.g = a.g - b;
+    tmp.b = a.b - b;
+
+    return tmp;
+  }
+
+
 
 };
 

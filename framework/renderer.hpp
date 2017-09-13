@@ -29,7 +29,7 @@ public:
 
   void render();
   void write(Pixel const& p);
-
+  bool intersectAABB(Ray const& ray);
   Color raytrace(Ray const& ray);  
   Color shades(Hit const& hit,const int index,Ray const& ray);
   Color addambient(Hit const& hit);
@@ -37,6 +37,7 @@ public:
    Color gettonemapped(Color const& color);
    Color addfog(Hit const& hit,float end);
   Color adddiffusespecular(Hit const& hit,const int index,Ray const& ray);
+  glm::vec3 get_scene_max();
   inline std::vector<Color> const& colorbuffer() const
   {
     return colorbuffer_;

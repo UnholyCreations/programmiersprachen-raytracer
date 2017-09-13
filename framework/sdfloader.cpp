@@ -266,6 +266,10 @@ std::cout<<"\nPrint Loaded Focal:\n";
 std::cout<<"________________________________________________________________________________________\n";  
 myscene.Print_Focal();
 */
+std::cout<<"\nPrint Loaded AABB min_max values:\n";  
+std::cout<<"________________________________________________________________________________________\n";  
+myscene.Print_max_min();
+
 
 return myscene;
 }
