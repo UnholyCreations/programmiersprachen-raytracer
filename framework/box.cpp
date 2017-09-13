@@ -19,11 +19,15 @@ Box::~Box() {}; //desturctor
 
 glm::vec3 Box::get_min() const
 {
-	return m_min;
+glm::vec4 q(m_min,1.0f);
+glm::vec3 p{m_worldtrans*q};
+	return p;
 }
 glm::vec3 Box::get_max() const
 {
-	return m_max;
+glm::vec4 q(m_max,1.0f);
+glm::vec3 p{m_worldtrans*q};
+  return p;
 }	
 
 double Box::area() const

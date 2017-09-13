@@ -27,11 +27,17 @@ Sphere::~Sphere()//destructor
 
 glm::vec3 Sphere::get_min() const
 {
-	return m_center+glm::vec3{m_radius,m_radius,m_radius};
+	glm::vec3 max=m_center+glm::vec3{m_radius,m_radius,m_radius};
+	glm::vec4 q(max,1.0f);
+	glm::vec3 p{m_worldtrans*q};
+	return max;
 }
 glm::vec3 Sphere::get_max() const
 {
-	return m_center+glm::vec3{-m_radius,-m_radius,-m_radius};
+	glm::vec3 min=m_center+glm::vec3{-m_radius,-m_radius,-m_radius};
+	glm::vec4 q(min,1.0f);
+	glm::vec3 p{m_worldtrans*q};
+	return min;
 }	
 
 glm::vec3 const& Sphere::get_center() const{
@@ -85,7 +91,7 @@ Hit Sphere::intersect(Ray const& ray)
         glm::vec3 m(M * n);
 		sphere_hit.m_norm = glm::normalize(m);
 
-		        
+
         glm::vec4 q(sphere_hit.m_intersect,1.0f);
         glm::vec3 p{m_worldtrans*q};
         sphere_hit.m_intersect=p;

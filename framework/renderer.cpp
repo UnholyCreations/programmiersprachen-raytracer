@@ -126,8 +126,8 @@ Color Renderer::raytrace(Ray const& ray)
   Color pixel_color=Color{0,0,0};
   double shortest = INFINITY; 
   int shortest_obj_index; 
-  //if (intersectAABB(ray)==true)
-  //{
+  if (intersectAABB(ray)==true)
+  {
   for (int i=0;i<scene_.ShapeVector.size();i++)
         {   
         Hit hit=scene_.ShapeVector[i]->intersect(ray);
@@ -141,7 +141,7 @@ Color Renderer::raytrace(Ray const& ray)
           }
         }
         };
- // }      
+  }      
   if(shortest == INFINITY)
   {
   pixel_color = Color{scene_.SceneAmbience.r,scene_.SceneAmbience.g,scene_.SceneAmbience.b};
