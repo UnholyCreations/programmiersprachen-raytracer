@@ -21,13 +21,14 @@
 #include <glm/glm.hpp>
 #include <time.h>
 #include <omp.h>
+#include <string>
 class Renderer
 {
 public:
   Renderer();
   Renderer(Scene const& scene);
 
-  void render();
+  void render(int frame);
   void write(Pixel const& p);
   bool intersectAABB(Ray const& ray);
   Color raytrace(Ray const& ray);  

@@ -15,15 +15,15 @@
 #include <map>
 #include <vector>
 #include <memory> 
+#include <string>
 
-
-Scene sdf_loader()
+Scene sdf_loader(std::string loadme)
 {
     Scene myscene;
  
   
     std::string line;
-    std::ifstream file ("scene.sdf");
+    std::ifstream file (loadme);
      if(file.is_open()){
 
       while(std::getline(file,line)){

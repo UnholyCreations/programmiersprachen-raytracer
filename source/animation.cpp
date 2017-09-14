@@ -9,18 +9,28 @@
 #include "sdfloader.cpp"
 int main(int argc, char* argv[])
 {
-  unsigned const width = 640;
-  unsigned const height = 480;
+  unsigned const width = 320;
+  unsigned const height = 240;
   std::string const filename = "./checkerboard.ppm";
-  Scene loadedscene = sdf_loader("scene.sdf");
+  Scene loadedscene = sdf_loader("animationstart.sdf");
   loadedscene.x_resolution=width;
   loadedscene.y_resolution=height;
   //loadedscene.x_resolution=height;
   //loadedscene.y_resolution=width;
-  Renderer app(loadedscene);
-  app.render(0); 
-  //std::thread thr([&app]() { app.render(); });
 
+  Renderer app(loadedscene);
+  //app.render(1); 
+  for (int i=1;i<141;i++)
+  {
+  loadedscene.ShapeVector[0]->ShapeTranslate({0,0,6});	
+  loadedscene.ShapeVector[0]->ShapeRotate(1,{0,0,1});	
+  loadedscene.ShapeVector[1]->ShapeTranslate({0,0,-6});	
+  loadedscene.ShapeVector[2]->ShapeTranslate({0,0,6});	
+  loadedscene.ShapeVector[2]->ShapeRotate(1,{0,0,1});	
+  app.render(i);
+  }
+  //std::thread thr([&app]() { app.render(); });
+  /*
   Window win{glm::ivec2{width,height}};
 
   while (!win.should_close()) {
@@ -29,7 +39,7 @@ int main(int argc, char* argv[])
     }
     win.show(app.colorbuffer());
   }
-
+	*/
   //thr.join();
 
   return 0;

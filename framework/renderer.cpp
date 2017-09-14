@@ -27,7 +27,7 @@ Renderer::Renderer(Scene const& scene):
 
 
 
-void Renderer::render()
+void Renderer::render(int frame)
 {
 
 float startTime = omp_get_wtime();
@@ -113,7 +113,7 @@ for (y = 0; y < scene_.y_resolution; ++y)
       write(p);
     }
   }   
-//ppm_.save("az");
+ppm_.save("frame"+std::to_string(frame));
 /////////////////////////////////////////////////////////////////
 float stopTime = omp_get_wtime();
 std::cout<<"render execulation time: "<<stopTime - startTime<<"\n";
@@ -126,8 +126,8 @@ Color Renderer::raytrace(Ray const& ray)
   Color pixel_color=Color{0,0,0};
   double shortest = INFINITY; 
   int shortest_obj_index; 
-  if (intersectAABB(ray)==true)
-  {
+  //if (intersectAABB(ray)==true)
+  //{
   for (int i=0;i<scene_.ShapeVector.size();i++)
         {   
         Hit hit=scene_.ShapeVector[i]->intersect(ray);
@@ -141,7 +141,7 @@ Color Renderer::raytrace(Ray const& ray)
           }
         }
         };
-  }      
+  //}      
   if(shortest == INFINITY)
   {
   pixel_color = Color{scene_.SceneAmbience.r,scene_.SceneAmbience.g,scene_.SceneAmbience.b};
