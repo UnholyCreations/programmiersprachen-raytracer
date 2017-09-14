@@ -1,17 +1,12 @@
 # materials
-
-define material redb  1 0 0 1 0 0 1 1 1 5
 define material blues 0 0 1 0 0 1 1 1 1 7
-define material blueb 0 0 1 0 0 1 0 0 0 5
 define material greenb 0 1 0 0 1 0 0 0 0 5
-define material yellowb 1 1 0 1 1 0 0 0 0 5
-define material purpleb 0 1 1 0 1 1 0 0 0 5
 # geometry
 
 define shape box box0 -25 -25 -25 25 25 25 greenb
 define shape sphere sphere0 100 0 20 30 blues
 define shape box box1 -25 -25 -25 25 25 25 greenb
-# composite
+# transformationen
 transform box0 translate 0 0 -650
 transform sphere0 translate 0 60 130
 transform box1 translate 0 -60 -600
@@ -25,4 +20,4 @@ define camera eye 120 -5 0 5 0 0 -1 0 1 0
 # camera xform
 transform eye rotate -45 1 0 0
 transform eye translate 0 100 0
-# ... and gorender eye image . ppm
+#scene animation
