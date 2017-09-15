@@ -25,19 +25,19 @@ Sphere::~Sphere()//destructor
 
 
 
-glm::vec3 Sphere::get_min() const
+glm::vec3 Sphere::get_max() const
 {
 	glm::vec3 max=m_center+glm::vec3{m_radius,m_radius,m_radius};
 	glm::vec4 q(max,1.0f);
-	glm::vec3 p{m_worldtrans*q};
-	return max;
+	glm::vec3 p{m_translate*m_scale*q};
+	return p;
 }
-glm::vec3 Sphere::get_max() const
+glm::vec3 Sphere::get_min() const
 {
-	glm::vec3 min=m_center+glm::vec3{-m_radius,-m_radius,-m_radius};
+	glm::vec3 min=m_center-glm::vec3{m_radius,m_radius,m_radius};
 	glm::vec4 q(min,1.0f);
-	glm::vec3 p{m_worldtrans*q};
-	return min;
+	glm::vec3 p{m_translate*m_scale*q};
+	return p;
 }	
 
 glm::vec3 const& Sphere::get_center() const{

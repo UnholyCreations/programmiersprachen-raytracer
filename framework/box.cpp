@@ -18,15 +18,17 @@ Box::~Box() {}; //desturctor
 
 
 glm::vec3 Box::get_min() const
-{
+{  
 glm::vec4 q(m_min,1.0f);
-glm::vec3 p{m_worldtrans*q};
+glm::vec3 p{m_translate*m_scale*q};
+p+=p*0.33f;
 	return p;
 }
 glm::vec3 Box::get_max() const
 {
 glm::vec4 q(m_max,1.0f);
-glm::vec3 p{m_worldtrans*q};
+glm::vec3 p{m_translate*m_scale*q};
+p+=p*0.33f;
   return p;
 }	
 

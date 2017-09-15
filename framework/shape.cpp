@@ -9,7 +9,10 @@ m_material{material},
 m_type{type},
   m_worldtrans{
   1.0f},
-  m_worldtrans_inv{glm::inverse(m_worldtrans)}
+  m_worldtrans_inv{glm::inverse(m_worldtrans)},
+  m_translate{glm::mat4(1.0f)},
+  m_rotate{1.0f},
+  m_scale{1.0f}
  {}
 Shape::~Shape() {//std::cout<< "shape destructor\n";
 } //destuctor
@@ -66,7 +69,8 @@ ShapeScale[0] = glm::vec4 {value.x,0.0f,0.0f,0.0f};
 ShapeScale[1] = glm::vec4 {0.0f,value.y,0.0f,0.0f};
 ShapeScale[2] = glm::vec4 {0.0f,0.0f,value.z,0.0f};
 ShapeScale[3] = glm::vec4 {0.0f,0.0f,0.0f,1.0f};
-m_worldtrans=m_worldtrans*ShapeScale;
+m_scale=m_scale*ShapeScale;
+m_worldtrans=m_translate*m_rotate*m_scale;
 m_worldtrans_inv=glm::inverse(m_worldtrans);
 }
 
@@ -81,7 +85,8 @@ void Shape::ShapeRotate(float angle,glm::vec3 axis)
   ShapeRotate[1] = glm::vec4 {0, cos(angle),sin(angle),0.0};
   ShapeRotate[2] = glm::vec4 {0, -sin(angle),cos(angle),0.0};
   ShapeRotate[3] = glm::vec4 {0.0, 0.0,0.0,1.0};
-  m_worldtrans=m_worldtrans*ShapeRotate;
+  m_rotate=m_rotate*ShapeRotate;
+  m_worldtrans=m_translate*m_rotate*m_scale;
   m_worldtrans_inv=glm::inverse(m_worldtrans);
   }
   if (axis.y!=0)
@@ -90,7 +95,8 @@ void Shape::ShapeRotate(float angle,glm::vec3 axis)
   ShapeRotate[1] = glm::vec4 {0.0, 1.0, 0.0, 0.0};
   ShapeRotate[2] = glm::vec4 {sin(angle), 0.0, cos(angle), 0.0};
   ShapeRotate[3] = glm::vec4 {0.0, 0.0, 0.0, 1.0};
-  m_worldtrans=m_worldtrans*ShapeRotate;
+  m_rotate=m_rotate*ShapeRotate;
+  m_worldtrans=m_translate*m_rotate*m_scale;
   m_worldtrans_inv=glm::inverse(m_worldtrans);
   }
   if (axis.z!=0)
@@ -98,8 +104,9 @@ void Shape::ShapeRotate(float angle,glm::vec3 axis)
   ShapeRotate[0] = glm::vec4 {cos(angle), -sin(angle), 0.0, 0.0};
   ShapeRotate[1] = glm::vec4 {sin(angle), cos(angle), 0.0, 0.0};
   ShapeRotate[2] = glm::vec4 {0.0, 0.0, 1.0, 0.0};
-  ShapeRotate[3] = glm::vec4 {0.0, 0.0, 0.0, 1.0};  
-  m_worldtrans=m_worldtrans*ShapeRotate;
+  ShapeRotate[3] = glm::vec4 {0.0, 0.0, 0.0, 1.0};
+  m_rotate=m_rotate*ShapeRotate;
+  m_worldtrans=m_translate*m_rotate*m_scale;
   m_worldtrans_inv=glm::inverse(m_worldtrans);
   }
 
@@ -112,6 +119,7 @@ ShapeTranslate[0] = glm::vec4 {1.0f,0.0f,0.0f,0.0f};
 ShapeTranslate[1] = glm::vec4 {0.0f,1.0f,0.0f,0.0f};
 ShapeTranslate[2] = glm::vec4 {0.0f,0.0f,1.0f,0.0f};
 ShapeTranslate[3] = glm::vec4 {offset.x,offset.y,offset.z,1.0f};
-m_worldtrans=m_worldtrans*ShapeTranslate;
+m_translate=m_translate*ShapeTranslate;
+m_worldtrans=m_translate*m_rotate*m_scale;
 m_worldtrans_inv=glm::inverse(m_worldtrans);
 }

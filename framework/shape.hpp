@@ -8,6 +8,9 @@
 #include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
+#include "glm/gtx/transform.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include <algorithm>
 struct Hit;
 class Shape
 {
@@ -39,6 +42,10 @@ public:
 protected:
 glm::mat4 m_worldtrans;
 glm::mat4 m_worldtrans_inv;
+glm::mat4 m_translate;
+glm::mat4 m_rotate;
+glm::mat4 m_scale;
+
 std::string m_name;
 Material m_material;
 int m_type;

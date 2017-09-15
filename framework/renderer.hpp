@@ -47,6 +47,8 @@ public:
 float m_focal;
 glm::vec3 focal_plane;
 glm::vec3 focal_normal;
+glm::vec3 max;
+glm::vec3 min;
 private:
   Scene scene_;
   std::vector<Color> colorbuffer_;

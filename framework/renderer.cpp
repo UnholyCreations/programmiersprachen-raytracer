@@ -9,11 +9,14 @@
 
 #include "renderer.hpp"
 #include <random>
+
 Renderer::Renderer():
     scene_(),
     colorbuffer_(scene_.x_resolution*scene_.y_resolution, Color{0,0,0}),
     ppm_(scene_.x_resolution, scene_.y_resolution, "default_constrtor_img.ppm")
     {
+    max=scene_.get_max();
+    min=scene_.get_min();
     //focal_plane=scene_.SceneCamera.m_dir*m_focal;
     }
 
@@ -23,13 +26,20 @@ Renderer::Renderer(Scene const& scene):
     ppm_(scene.x_resolution, scene.y_resolution, scene.file_name)
     {
     //focal_plane=scene_.SceneCamera.m_dir*m_focal;
+    max=scene_.get_max();
+    min=scene_.get_min();
     }
 
 
 
 void Renderer::render(int frame)
 {
-
+/*
+glm::vec3 max=scene_.get_max();
+glm::vec3 min=scene_.get_min();
+std::shared_ptr<Shape> temp_ptr=std::make_shared<Box>(Box {"AABB", scene_.MaterialMap["greenb"], min, max});
+scene_.ShapeVector.push_back(temp_ptr);
+*/
 float startTime = omp_get_wtime();
 
 //focal_plane=scene_.SceneCamera.m_dir*m_focal;
@@ -126,8 +136,8 @@ Color Renderer::raytrace(Ray const& ray)
   Color pixel_color=Color{0,0,0};
   double shortest = INFINITY; 
   int shortest_obj_index; 
-  //if (intersectAABB(ray)==true)
-  //{
+  if (intersectAABB(ray)==true)
+  {
   for (int i=0;i<scene_.ShapeVector.size();i++)
         {   
         Hit hit=scene_.ShapeVector[i]->intersect(ray);
@@ -141,7 +151,7 @@ Color Renderer::raytrace(Ray const& ray)
           }
         }
         };
-  //}      
+  }      
   if(shortest == INFINITY)
   {
   pixel_color = Color{scene_.SceneAmbience.r,scene_.SceneAmbience.g,scene_.SceneAmbience.b};
@@ -343,8 +353,7 @@ return temp;
 
 bool Renderer::intersectAABB(Ray const& ray)
 {
-glm::vec3 max=scene_.get_max();
-glm::vec3 min=scene_.get_min();
+
 if 
 (
 ray.m_origin.x>min.x &&

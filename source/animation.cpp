@@ -15,7 +15,6 @@ int main(int argc, char* argv[])
 {
   unsigned const width = 320;
   unsigned const height = 240;
-  std::string const filename = "./checkerboard.ppm";
   Scene loadedscene = sdf_loader("animationstart.sdf");
   loadedscene.x_resolution=width;
   loadedscene.y_resolution=height;
