@@ -34,7 +34,7 @@ glm::vec3 Sphere::get_max() const
 }
 glm::vec3 Sphere::get_min() const
 {
-	glm::vec3 min=m_center-glm::vec3{m_radius,m_radius,m_radius};
+	glm::vec3 min=m_center+glm::vec3{-m_radius,-m_radius,-m_radius};
 	glm::vec4 q(min,1.0f);
 	glm::vec3 p{m_translate*m_scale*q};
 	return p;

@@ -28,9 +28,11 @@ int main(int argc, char* argv[])
   //app.render(1); 
   for (int i=1;i<141;i++)
   {
+  app.max.z+=6;
+  app.min.z+=6;
   loadedscene.ShapeVector[0]->ShapeTranslate({0,0,6});	
   loadedscene.ShapeVector[0]->ShapeRotate(1,{0,0,1});	
-  loadedscene.ShapeVector[1]->ShapeTranslate({0,0,-6});	
+  loadedscene.ShapeVector[1]->ShapeTranslate({0,0,6});	
   loadedscene.ShapeVector[2]->ShapeTranslate({0,0,6});	
   loadedscene.ShapeVector[2]->ShapeRotate(1,{0,0,1});
   write_frame_sdf(i);
