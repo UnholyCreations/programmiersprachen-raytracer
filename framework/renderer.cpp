@@ -116,7 +116,7 @@ for (y = 0; y < scene_.y_resolution; ++y)
 ppm_.save("frame"+std::to_string(frame));
 /////////////////////////////////////////////////////////////////
 float stopTime = omp_get_wtime();
-std::cout<<"render execulation time: "<<stopTime - startTime<<"\n";
+std::cout<<"render execuction time: "<<stopTime - startTime<<"\n";
 }
 
 

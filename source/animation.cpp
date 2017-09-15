@@ -34,8 +34,7 @@ int main(int argc, char* argv[])
   loadedscene.ShapeVector[1]->ShapeTranslate({0,0,-6});	
   loadedscene.ShapeVector[2]->ShapeTranslate({0,0,6});	
   loadedscene.ShapeVector[2]->ShapeRotate(1,{0,0,1});
-  //write_frame_sdf(i);
-//ppm_.save("frame"+std::to_string(frame));
+  write_frame_sdf(i);
 
 
 
