@@ -26,14 +26,14 @@ Renderer::Renderer(Scene const& scene):
     ppm_(scene.x_resolution, scene.y_resolution, scene.file_name)
     {
     //focal_plane=scene_.SceneCamera.m_dir*m_focal;
-    max=scene_.get_max();
-    min=scene_.get_min();
     }
 
 
 
 void Renderer::render(int frame)
 {
+max=scene_.get_max();
+min=scene_.get_min();
 /*
 glm::vec3 max=scene_.get_max();
 glm::vec3 min=scene_.get_min();
