@@ -2,15 +2,11 @@
 #include <string>
 Box::Box() : Shape{}, m_min{0,0,0},m_max{1,1,1} // default constructor
 {}
-Box::Box(std::string const& name,Material const& material,glm::vec3 const& min,glm::vec3 const& max)://user constructor
+Box::Box(std::string const& name,Material const& material,glm::vec3 const& kord1,glm::vec3 const& kord2)://user constructor
 Shape{name,material,0},
-m_kord1{min},
-m_kord2{max}
+m_min{std::min(kord1.x,kord2.x),std::min(kord1.y,kord2.y),std::min(kord1.z,kord2.z)},
+m_max{std::max(kord1.x,kord2.x),std::max(kord1.y,kord2.y),std::max(kord1.z,kord2.z)}
 {
-if (m_kord1.x>m_kord2.x) {m_max.x=m_kord1.x; m_min.x=m_kord2.x;} else {m_max.x=m_kord2.x; m_min.x=m_kord1.x;};
-if (m_kord1.y>m_kord2.y) {m_max.y=m_kord1.y; m_min.y=m_kord2.y;} else {m_max.y=m_kord2.y; m_min.y=m_kord1.y;};
-if (m_kord1.z>m_kord2.z) {m_max.z=m_kord1.z; m_min.z=m_kord2.z;} else {m_max.z=m_kord2.z; m_min.z=m_kord1.z;};
-
 }
 
 Box::~Box() {}; //desturctor

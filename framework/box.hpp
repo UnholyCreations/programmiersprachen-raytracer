@@ -8,11 +8,10 @@
 #include <string>
 #include <cmath>
 #include <catch.hpp>
+#include <algorithm>
 class Box: public Shape
 {
 private:
-  glm::vec3 m_kord1;
-  glm::vec3 m_kord2;
   glm::vec3 m_min;
   glm::vec3 m_max;
 

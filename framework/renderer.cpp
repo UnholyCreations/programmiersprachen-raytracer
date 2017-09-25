@@ -150,7 +150,6 @@ Color Renderer::raytrace(Ray const& ray)
           {
           shortest = hit.m_distance;
           first_hit = hit;
-          shortest_obj_index=i;
           }
         }
         };
@@ -161,19 +160,19 @@ Color Renderer::raytrace(Ray const& ray)
   }
   else
   {
-  pixel_color=shades(first_hit,shortest_obj_index,ray);
+  pixel_color=shades(first_hit,ray);
     //pixel_color={0,0,0};
   }
   return pixel_color;
 }
-Color Renderer::shades(Hit const& hit,int const& index,Ray const& ray)
+Color Renderer::shades(Hit const& hit,Ray const& ray)
 {
 
   
 
   Color Ia=addambient(hit);
 
-  Color Ids=adddiffusespecular(hit,index,ray);
+  Color Ids=adddiffusespecular(hit,ray);
 
   //Color Ifog=addfog(hit,1000);
   Color I=Ia+Ids;
@@ -231,7 +230,7 @@ return Id*kd;
 //https://stackoverflow.com/questions/31064234/find-the-angle-between-two-vectors-from-an-arbitrary-origin#31064328
 //Never forget the credit ;)
 
-Color Renderer::adddiffusespecular(Hit const& hit,int const& index,Ray const& ray)
+Color Renderer::adddiffusespecular(Hit const& hit,Ray const& ray)
 {
 Color kd=hit.m_shape_ptr->get_material().m_kd;
 float dotproduct =0.0f;
@@ -243,7 +242,7 @@ Color Id={0.0f,0.0f,0.0f};
 Color Is={0.0f,0.0f,0.0f};
 Color Ids={0.0f,0.0f,0.0f};
 bool UnShadows=1;
-  
+    
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           ////////////// LIGHT NORMAL AND RAY
@@ -255,11 +254,8 @@ bool UnShadows=1;
           Hit shadowhit=scene_.ShapeVector[j]->intersect(lightray);
           float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[i]->m_pos);
           if (shadowhit.m_distance<lightdistance ) { //works
-              if (j!=index)
-              {
               UnShadows=0;
               break;
-              }
            }
           }
 
@@ -282,8 +278,7 @@ bool UnShadows=1;
 
 
           Ip_RGB=scene_.LightVector[i]->m_brightness*scene_.LightVector[i]->m_color;
-          //Ip_RGB={0,0,0};
-
+          
           if (i==0) {Ids=Ip_RGB*(Id+Is);}
           else
           {Ids=0.5f*(Ids+Ip_RGB*(Id+Is));}
