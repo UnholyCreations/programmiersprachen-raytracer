@@ -7,6 +7,7 @@
 #include <cmath>
 #include "scene.hpp"
 #include "sdfloader.cpp"
+#include <omp.h>
 int main(int argc, char* argv[])
 {
   unsigned const width = 640;
@@ -18,7 +19,9 @@ int main(int argc, char* argv[])
   //loadedscene.x_resolution=height;
   //loadedscene.y_resolution=width;
   Renderer app(loadedscene);
+  
   app.render(0); 
+
   //std::thread thr([&app]() { app.render(); });
 
   Window win{glm::ivec2{width,height}};

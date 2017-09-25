@@ -84,8 +84,10 @@ Scene sdf_loader(std::string loadme)
             ss>>LightColor.g;
             ss>>LightColor.b;
             ss>>Brightness;
-            Light light(name,LightPos,LightColor,Brightness); 
-            myscene.LightVector.push_back(light);
+           
+            //myscene.LightVector.push_back(light);
+            std::shared_ptr<Light> temp_ptr=std::make_shared<Light>(Light {name,LightPos,LightColor,Brightness});
+             myscene.LightVector.push_back(temp_ptr);
 
             }
             else if(keyword == "shape"){
@@ -240,7 +242,7 @@ Scene sdf_loader(std::string loadme)
 
  }}
 //Print Stuff..
-/*                                
+                         
 std::cout<<"\n________________________________________________________________________________________"; 
 std::cout<<"\nPrint Loaded Shapes:\n";  
 std::cout<<"________________________________________________________________________________________\n";                                      
@@ -265,7 +267,7 @@ std::cout<<"____________________________________________________________________
 std::cout<<"\nPrint Loaded Focal:\n";  
 std::cout<<"________________________________________________________________________________________\n";  
 myscene.Print_Focal();
-*/
+
 std::cout<<"\nPrint Loaded AABB min_max values:\n";  
 std::cout<<"________________________________________________________________________________________\n";  
 myscene.Print_max_min();

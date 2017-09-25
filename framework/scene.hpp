@@ -21,7 +21,7 @@ struct Scene
     Camera SceneCamera;
 	std::map<std::string,Material> MaterialMap;
 	std::vector<std::shared_ptr<Shape>> ShapeVector;
-    std::vector<Light> LightVector;
+    std::vector<std::shared_ptr<Light>> LightVector;
     Color SceneAmbience{0,0,0};
 	void Print_Shapes()
 	{
@@ -50,11 +50,15 @@ struct Scene
     }
     void Print_Lights()
     {
-    for (Light l:LightVector)
-        {
-            l.print();
-        }
+    for (int i=0;i<LightVector.size();i++) //if i dont mess the indices after a month pause its not me... :D
+    {   
+
+    (*LightVector[i]).print();
+
+     };
     }
+
+    
     void Print_Ambience()
     {
         std::cout<<"col:"<<SceneAmbience.r<<" "<<SceneAmbience.g<<" "<<SceneAmbience.b<<"\n";

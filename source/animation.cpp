@@ -13,8 +13,8 @@
 #include <string>
 int main(int argc, char* argv[])
 {
-  unsigned const width = 320;
-  unsigned const height = 240;
+  unsigned const width = 640;
+  unsigned const height = 480;
   Scene loadedscene = sdf_loader("animationstart.sdf");
   loadedscene.x_resolution=width;
   loadedscene.y_resolution=height;

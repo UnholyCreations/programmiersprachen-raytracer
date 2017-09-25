@@ -106,7 +106,9 @@ for (y = 0; y < scene_.y_resolution; ++y)
         Ray dof_ray{{new_pos.x+float(xa)*0.33f,new_pos.y+float(ya)*0.33f,new_pos.z},new_dir};
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
         Color dof_color = raytrace(dof_ray);
-        p.color += dof_color*0.012345679f;
+        p.color += dof_color*0.012345679f; //9 dof rays
+        //p.color += dof_color*0.006933333f; //16 dof rays
+        //p.color += dof_color*0.004444444f; //25 dof rays
         }}
         
 
@@ -136,7 +138,8 @@ Color Renderer::raytrace(Ray const& ray)
   Color pixel_color=Color{0,0,0};
   double shortest = INFINITY; 
   int shortest_obj_index; 
-  if (intersectAABB(ray)==true)
+  AABB myAABB(max,min);
+  if (myAABB.intersect(ray)==true)
   {
   for (int i=0;i<scene_.ShapeVector.size();i++)
         {   
@@ -159,15 +162,20 @@ Color Renderer::raytrace(Ray const& ray)
   else
   {
   pixel_color=shades(first_hit,shortest_obj_index,ray);
+    //pixel_color={0,0,0};
   }
   return pixel_color;
 }
-Color Renderer::shades(Hit const& hit,const int index,Ray const& ray)
+Color Renderer::shades(Hit const& hit,int const& index,Ray const& ray)
 {
 
+  
+
   Color Ia=addambient(hit);
+
   Color Ids=adddiffusespecular(hit,index,ray);
-  Color Ifog=addfog(hit,1000);
+
+  //Color Ifog=addfog(hit,1000);
   Color I=Ia+Ids;
   I=gettonemapped(I);
   return I;
@@ -223,7 +231,7 @@ return Id*kd;
 //https://stackoverflow.com/questions/31064234/find-the-angle-between-two-vectors-from-an-arbitrary-origin#31064328
 //Never forget the credit ;)
 
-Color Renderer::adddiffusespecular(Hit const& hit,const int index,Ray const& ray)
+Color Renderer::adddiffusespecular(Hit const& hit,int const& index,Ray const& ray)
 {
 Color kd=hit.m_shape_ptr->get_material().m_kd;
 float dotproduct =0.0f;
@@ -231,22 +239,21 @@ Color Ip_RGB={0.0f,0.0f,0.0f};
 Color ks=hit.m_shape_ptr->get_material().m_ks;
 int m=hit.m_shape_ptr->get_material().m_m;
 glm::vec3 internorm =hit.m_norm; //N
-
 Color Id={0.0f,0.0f,0.0f};
 Color Is={0.0f,0.0f,0.0f};
 Color Ids={0.0f,0.0f,0.0f};
 bool UnShadows=1;
+  
     for (int i=0;i<scene_.LightVector.size();i++)
         {
           ////////////// LIGHT NORMAL AND RAY
-          glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i].m_pos-hit.m_intersect);
+          glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i]->m_pos-hit.m_intersect);
           Ray lightray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
-          //lightray.transformRay(hit.m_shape_ptr->get_worldtrans_inv());
           //////////////SHADOW CODE
           for (int j=0;j<scene_.ShapeVector.size();j++)
           {   
           Hit shadowhit=scene_.ShapeVector[j]->intersect(lightray);
-          float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[j].m_pos);
+          float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[i]->m_pos);
           if (shadowhit.m_distance<lightdistance ) { //works
               if (j!=index)
               {
@@ -265,8 +272,7 @@ bool UnShadows=1;
           Id=Id+kd*dotproduct;
 
           //specular  
-          glm::vec3 v =glm::normalize(ray.m_direction);
-          //glm::vec3 v=glm::normalize(hit.m_intersect-scene_.SceneCamera.m_pos);
+          glm::vec3 v =glm::normalize(ray.m_direction);;
           glm::vec3 r=glm::reflect(lightnorm,hit.m_norm); //R
           if (m%2==0) {m+=1;} // m soll durch 2 teilbar sein
           float RdotVpowM=pow(glm::dot(r,v),m);
@@ -275,8 +281,8 @@ bool UnShadows=1;
           //LIGHT INTENSITY
 
 
-          Ip_RGB=scene_.LightVector[i].m_brightness*scene_.LightVector[i].m_color;
-
+          Ip_RGB=scene_.LightVector[i]->m_brightness*scene_.LightVector[i]->m_color;
+          //Ip_RGB={0,0,0};
 
           if (i==0) {Ids=Ip_RGB*(Id+Is);}
           else

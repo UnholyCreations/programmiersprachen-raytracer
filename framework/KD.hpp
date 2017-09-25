@@ -7,7 +7,7 @@ class KDNODE{
 
 
 	public:
-	AABB m_aabb;
+	AABB m_AABB;
 	KDNODE* m_left;
 	KDNODE* m_right;
 	std::vector<std::shared_ptr<Shape>> KDShapeVector;

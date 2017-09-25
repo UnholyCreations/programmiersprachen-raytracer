@@ -1,4 +1,5 @@
 #include "shape.hpp"
+#include <random>
 //constructors
 Shape::Shape(): m_name {"Default Shape"}, m_material{},m_type{-1}  {//std::cout<< "shape default constructor\n";
 } //Default
@@ -13,7 +14,9 @@ m_type{type},
   m_translate{glm::mat4(1.0f)},
   m_rotate{1.0f},
   m_scale{1.0f}
- {}
+ {
+
+ }
 Shape::~Shape() {//std::cout<< "shape destructor\n";
 } //destuctor
 
@@ -56,6 +59,7 @@ Ray Shape::transformRay(glm::mat4 const& mat,Ray const &ray )
 	{
 	  glm::vec4 temp_org {ray.m_origin, 1.0f};
 	  glm::vec4 temp_dir {ray.m_direction, 0.0f};
+    
 	  glm::vec3 new_org {mat * temp_org };
 	  glm::vec3 new_dir {mat * temp_dir};
 	  Ray NewRay{new_org, glm::normalize(new_dir)};
