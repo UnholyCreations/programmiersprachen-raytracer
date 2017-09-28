@@ -45,10 +45,15 @@ glm::mat4 m_worldtrans_inv;
 glm::mat4 m_translate;
 glm::mat4 m_rotate;
 glm::mat4 m_scale;
-
 std::string m_name;
 Material m_material;
 int m_type;
+
+//mutable angles ;)
+mutable int m_BBOXangle_x;
+mutable int m_BBOXangle_y;
+mutable int m_BBOXangle_z;
+
 };
 
 

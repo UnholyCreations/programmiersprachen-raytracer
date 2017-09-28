@@ -9,6 +9,7 @@
 #include <cmath>
 #include <catch.hpp>
 #include <algorithm>
+#include <glm/gtx/string_cast.hpp>
 class Box: public Shape
 {
 private:

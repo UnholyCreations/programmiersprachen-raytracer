@@ -15,9 +15,7 @@ Renderer::Renderer():
     colorbuffer_(scene_.x_resolution*scene_.y_resolution, Color{0,0,0}),
     ppm_(scene_.x_resolution, scene_.y_resolution, "default_constrtor_img.ppm")
     {
-    max=scene_.get_max();
-    min=scene_.get_min();
-    //focal_plane=scene_.SceneCamera.m_dir*m_focal;
+
     }
 
 Renderer::Renderer(Scene const& scene):
@@ -25,7 +23,6 @@ Renderer::Renderer(Scene const& scene):
     colorbuffer_(scene.x_resolution*scene.y_resolution, Color{0,0,0}),
     ppm_(scene.x_resolution, scene.y_resolution, scene.file_name)
     {
-    //focal_plane=scene_.SceneCamera.m_dir*m_focal;
     }
 
 
@@ -34,6 +31,8 @@ void Renderer::render(int frame)
 {
 max=scene_.get_max();
 min=scene_.get_min();
+//std::shared_ptr<Shape> temp_ptr=std::make_shared<Box>(Box {"box", scene_.MaterialMap["blueb"], min, max});
+//scene_.ShapeVector.push_back(temp_ptr);
 /*
 glm::vec3 max=scene_.get_max();
 glm::vec3 min=scene_.get_min();
@@ -99,9 +98,9 @@ for (y = 0; y < scene_.y_resolution; ++y)
         //p.color += dof_color*0.11f;
         
         
-        for (xa=-1; xa<=1; xa+=1)
+        for (xa=-1; xa<=1; xa++)
         {
-        for (ya=-1; ya<=1; ya+=1)
+        for (ya=-1; ya<=1; ya++)
         {
         Ray dof_ray{{new_pos.x+float(xa)*0.33f,new_pos.y+float(ya)*0.33f,new_pos.z},new_dir};
         dof_ray=dof_ray.transformRay(scene_.SceneCamera.m_worldtrans);
@@ -141,7 +140,7 @@ Color Renderer::raytrace(Ray const& ray)
   AABB myAABB(max,min);
   if (myAABB.intersect(ray)==true)
   {
-  for (int i=0;i<scene_.ShapeVector.size();i++)
+  for (int i = scene_.ShapeVector.size()-1; i>=0; i--)
         {   
         Hit hit=scene_.ShapeVector[i]->intersect(ray);
         if(hit.m_hit == true)
@@ -243,13 +242,13 @@ Color Is={0.0f,0.0f,0.0f};
 Color Ids={0.0f,0.0f,0.0f};
 bool UnShadows=1;
     
-    for (int i=0;i<scene_.LightVector.size();i++)
+    for (int i=scene_.LightVector.size()-1;i>=0;i--)
         {
           ////////////// LIGHT NORMAL AND RAY
           glm::vec3 lightnorm =glm::normalize(scene_.LightVector[i]->m_pos-hit.m_intersect);
           Ray lightray {hit.m_intersect + lightnorm * 0.01f,lightnorm};
           //////////////SHADOW CODE
-          for (int j=0;j<scene_.ShapeVector.size();j++)
+          for (int j=scene_.ShapeVector.size()-1;j>=0;j--)
           {   
           Hit shadowhit=scene_.ShapeVector[j]->intersect(lightray);
           float lightdistance= glm::distance(hit.m_intersect,scene_.LightVector[i]->m_pos);

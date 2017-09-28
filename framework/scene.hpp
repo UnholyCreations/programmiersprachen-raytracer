@@ -91,7 +91,7 @@ struct Scene
     {
     glm::vec3 max{0.0f,0.0f,0.0f};
     glm::vec3 temp;
-    for (int i=0;i<ShapeVector.size();i++)
+    for (int i=ShapeVector.size()-1;i>=0;i--)
     {
     temp=ShapeVector[i]->get_max();
     if (temp.x>max.x) {max.x=temp.x;};
@@ -105,7 +105,7 @@ struct Scene
     {
     glm::vec3 min{0.0f,0.0f,0.0f};
     glm::vec3 temp;
-    for (int i=0;i<ShapeVector.size();i++)
+    for (int i=ShapeVector.size()-1;i>=0;i--)
     {
     temp=ShapeVector[i]->get_min();
     if (temp.x<min.x) {min.x=temp.x;};

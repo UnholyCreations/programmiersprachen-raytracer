@@ -17,14 +17,20 @@ glm::vec3 Box::get_min() const
 {  
 glm::vec4 q(m_min,1.0f);
 glm::vec3 p{m_translate*m_scale*q};
-p+=p*0.33f;
+//p.x+=p.x*(float(m_BBOXangle_x)*0.066666667f);
+//p.y+=p.y*(float(m_BBOXangle_y)*0.066666667f);
+//p.z+=p.z*(float(m_BBOXangle_z)*0.066666667f);
+
 	return p;
 }
 glm::vec3 Box::get_max() const
 {
 glm::vec4 q(m_max,1.0f);
 glm::vec3 p{m_translate*m_scale*q};
-p+=p*0.33f;
+
+//p.x+=p.x*(float(m_BBOXangle_x)*0.066666667f);
+//p.y+=p.y*(float(m_BBOXangle_y)*0.066666667f);
+//p.z+=p.z*(float(m_BBOXangle_z)*0.066666667f);
   return p;
 }	
 

@@ -13,7 +13,10 @@ m_type{type},
   m_worldtrans_inv{glm::inverse(m_worldtrans)},
   m_translate{glm::mat4(1.0f)},
   m_rotate{1.0f},
-  m_scale{1.0f}
+  m_scale{1.0f},
+  m_BBOXangle_x{0},
+  m_BBOXangle_y{0},
+  m_BBOXangle_z{0}
  {
 
  }
@@ -92,6 +95,7 @@ void Shape::ShapeRotate(float angle,glm::vec3 axis)
   m_rotate=m_rotate*ShapeRotate;
   m_worldtrans=m_translate*m_rotate*m_scale;
   m_worldtrans_inv=glm::inverse(m_worldtrans);
+  m_BBOXangle_x=abs(m_BBOXangle_x+int(angle))%45;
   }
   if (axis.y!=0)
   {
@@ -102,6 +106,7 @@ void Shape::ShapeRotate(float angle,glm::vec3 axis)
   m_rotate=m_rotate*ShapeRotate;
   m_worldtrans=m_translate*m_rotate*m_scale;
   m_worldtrans_inv=glm::inverse(m_worldtrans);
+  m_BBOXangle_y=abs(m_BBOXangle_y+int(angle))%45;
   }
   if (axis.z!=0)
   {
@@ -112,6 +117,7 @@ void Shape::ShapeRotate(float angle,glm::vec3 axis)
   m_rotate=m_rotate*ShapeRotate;
   m_worldtrans=m_translate*m_rotate*m_scale;
   m_worldtrans_inv=glm::inverse(m_worldtrans);
+  m_BBOXangle_z=abs(m_BBOXangle_z+int(angle))%45;
   }
 
 }
